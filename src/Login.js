@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
+import { handleSuccesssfulLogin } from './auth.js'
 
 function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loginOrSignup, setLoginOrSignup] = useState(true)
+  const history = useHistory()
 
   const login = () => {
     let param = { username: username, password: password}
@@ -12,8 +15,11 @@ function Login() {
       'http://localhost:5000/login',
       param,
     )
-      .then(() => {
-        console.log('hip hip hurray')
+      .then(res => {
+        console.log(res)
+        handleSuccesssfulLogin(res.data.Token)
+        console.log('done')
+        history.push('/')
       })
   }
 
