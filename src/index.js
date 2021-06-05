@@ -5,12 +5,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { checkAuthentication } from './auth'
+
 import {
   BrowserRouter as Router,
 } from "react-router-dom";
 
+const auth = checkAuthentication()
+
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-axios.defaults.baseURL = "http://192.168.0.150:5000/"
+// axios.defaults.baseURL = "http://192.168.0.150:5000/"
+axios.defaults.baseURL = "http://192.168.0.150:5000/api/"
 
 ReactDOM.render(
   <React.StrictMode>

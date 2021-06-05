@@ -22,7 +22,7 @@ function App() {
   }
 
   return (
-    <div className="max-h-screen w-full flex flex-col bg-blue-50">
+    <div className="max-h-screen min-h-screen w-full flex flex-col bg-blue-50">
       <p className="p-2 bg-white flex justify-between">
         <code>squid.chat</code>
         {loggedIn && (<button type="button" onClick={() => { logout() }}><code>log out</code></button>)}

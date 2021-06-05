@@ -2,12 +2,12 @@ import axios from 'axios'
 
 export function useToken() {
   const token = localStorage.getItem('jwt')
-  handleAuthentication(token)
   return token
 }
 
 export function handleSuccesssfulLogin(token) {
     localStorage.setItem('jwt', token)
+    handleAuthentication(token)
 }
 
 export async function checkAuthentication() {
@@ -21,5 +21,4 @@ export async function checkAuthentication() {
 
 export function handleAuthentication(token) {
     axios.defaults.headers.common['tasty_token'] = `Bearer ${token}`
-    console.log('axios.defaults.headers.common[tasty_token]', axios.defaults.headers.common['tasty_token'])
 }
