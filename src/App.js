@@ -10,9 +10,11 @@ import {
 import { useToken } from './auth.js'
 import './App.css';
 import Login from './Login'
+import Main from "./Main.js";
 
 function App() {
-  const loggedIn = useToken()
+  const loggedIn = useToken() || false
+  console.log('loggedIn', loggedIn)
   const history = useHistory()
   const logout = () => {
     localStorage.removeItem('jwt')
@@ -20,7 +22,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-blue-50">
+    <div className="max-h-screen w-full flex flex-col bg-blue-50">
       <p className="p-2 bg-white flex justify-between">
         <code>squid.chat</code>
         {loggedIn && (<button type="button" onClick={() => { logout() }}><code>log out</code></button>)}
@@ -29,7 +31,7 @@ function App() {
         {/* If the current URL is /about, this route is rendered
             while the rest are ignored */}
         <Route path="/login">
-          {loggedIn ? <Redirect to="/dashboard" /> : <Login />}
+          {loggedIn ? <Redirect to="/home" /> : <Login />}
         </Route>
 
         {/* Note how these two routes are ordered. The more specific
@@ -52,7 +54,7 @@ function App() {
             the URL because all URLs begin with a /. So that's
             why we put this one last of all */}
         <PrivateRoute path="/">
-          <h1>home</h1>
+          <Main />
         </PrivateRoute>
       </Switch>
     </div>

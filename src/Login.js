@@ -17,7 +17,7 @@ function Login() {
   const login = () => {
     let param = { username, password }
     axios.post(
-      'http://localhost:5000/login',
+      '/login',
       param,
     )
       .then(res => {
@@ -29,7 +29,7 @@ function Login() {
   const signup = () => {
     let param = { username: registerUsername, password: registerPassword, email: registerEmail, fullname: registerName }
     axios.post(
-      'http://localhost:5000/signup',
+      '/signup',
       param,
     )
       .then(res => {

@@ -9,6 +9,9 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+axios.defaults.baseURL = "http://192.168.0.150:5000/"
+
 ReactDOM.render(
   <React.StrictMode>
     <Router>
@@ -22,5 +25,3 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
