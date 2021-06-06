@@ -9,6 +9,4 @@ export const socket = io("https://squid.chat/sockets/"  , {
     }
   });
 
-socket.emit('new_session', {
-    tasty_token: `Bearer ${localStorage.getItem('jwt')}`
-})
+socket.emit('new_session')
