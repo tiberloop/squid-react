@@ -14,7 +14,7 @@ import {
 const auth = checkAuthentication()
 
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-// axios.defaults.baseURL = "http://192.168.0.150:5000/"
+// axios.defaults.baseURL = "http://127.0.0.1:5000/api/"
 axios.defaults.baseURL = "https://squid.chat/api/"
 
 ReactDOM.render(

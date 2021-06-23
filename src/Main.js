@@ -28,8 +28,9 @@ function Main() {
   //Load room data
   if (!rooms.length) {
     axios.get('/rooms/all').then(res => {
-      setRooms(res.data.list)
+      setRooms(res.data.rooms || [])
     })
+    console.log('rooms', rooms)
   }
 
   if (!user) {
@@ -38,8 +39,8 @@ function Main() {
     })
   }
 
-  const dms = rooms.filter(r => r.is_dm)
-  const channels = rooms.filter(r => !r.is_dm)
+  const dms = rooms && rooms.filter(r => r.is_dm)
+  const channels = rooms && rooms.filter(r => !r.is_dm)
 
   const updateMessages = (message) => {
     // console.log('currentRoomMessages', currentRoomMessages)
@@ -96,7 +97,7 @@ function Main() {
         <p className="p-2 border-b border-gray-300"><strong>Channels</strong></p>
         <div className="border-b border-gray-300">
         {channels && channels.map(r => (
-          <button className="p-2 w-full text-left block hover:underline" onClick={() => setCurrentRoom(r._id)}>
+          <button className="p-2 w-full text-left block hover:underline" onClick={() => setCurrentRoom(r.room_id)}>
             #{r.name}
           </button>
         ))}
@@ -104,7 +105,7 @@ function Main() {
         <p className="p-2 border-b border-gray-300"><strong>DMs</strong></p>
         <div className="border-b border-gray-300">
         {dms && dms.map(r => (
-          <button className="p-2 w-full text-left block hover:underline" onClick={() => setCurrentRoom(r._id)}>
+          <button className="p-2 w-full text-left block hover:underline" onClick={() => setCurrentRoom(r.room_id)}>
             {r.name}
           </button>
         ))}
@@ -118,7 +119,7 @@ function Main() {
 
 
     <div className="m-1 rounded bg-white flex flex-grow border flex-col border-gray-300">
-      <p className="p-2 border-b border-gray-300">{rooms.find(r => r._id === currentRoom)?.name || 'No room selected'}</p>
+      <p className="p-2 border-b border-gray-300">{rooms.find(r => r.room_id === currentRoom)?.name || 'No room selected'}</p>
       <div
         id="messages"
         ref={chatRoomRef}
