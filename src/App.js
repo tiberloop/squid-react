@@ -13,6 +13,8 @@ import Login from './Login'
 import Main from "./Main.js";
 
 function App() {
+  const version = "0.2"
+
   const loggedIn = useToken() || false
   console.log('loggedIn', loggedIn)
   const history = useHistory()
@@ -24,7 +26,7 @@ function App() {
   return (
     <div className="max-h-screen min-h-screen w-full flex flex-col bg-blue-50">
       <p className="p-2 bg-white flex justify-between">
-        <code>squid.chat</code>
+        <code>squid.chat <span className="text-gray-300">{version}</span></code>
         {loggedIn && (<button type="button" onClick={() => { logout() }}><code>log out</code></button>)}
       </p>
       <Switch>
