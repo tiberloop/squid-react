@@ -5,10 +5,18 @@ import Message from './components/Message'
 import { useToken } from './auth.js'
 import LoadingSpinner from "./components/LoadingSpinner";
 
+function getDmRoomId(userId) {
+  axios.get(`/rooms/dm/${userId}`).then(res => {
+    console.log(res.data.room_id)
+    return res.data.room_id
+  })
+}
+
 function Main() {
 
   const [roomIds, setRoomIds] = useState([])
   const [rooms, setRooms] = useState([])
+  const [allUsers, setAllUsers] = useState([])
   const [messagesDict, setMessagesDict] = useState({})
 
   const [user, setUser] = useState(null)
@@ -39,7 +47,14 @@ function Main() {
     })
   }
 
-  const dms = rooms && rooms.filter(r => r.is_dm)
+  //Get list of all users in SquidChat
+  if (allUsers && !allUsers.length) {
+    axios.get('/users/list').then(res => {
+      setAllUsers(res.data)
+    })
+  }
+
+  const dms = allUsers && allUsers.filter(u => u.username !== user)
   const channels = rooms && rooms.filter(r => !r.is_dm)
 
   const updateMessages = (message) => {
@@ -104,9 +119,9 @@ function Main() {
         </div>
         <p className="p-2 border-b border-gray-300"><strong>DMs</strong></p>
         <div className="border-b border-gray-300">
-        {dms && dms.map(r => (
-          <button className="p-2 w-full text-left block hover:underline" onClick={() => setCurrentRoom(r.room_id)}>
-            {r.name}
+        {dms && dms.map(u => (
+          <button className="p-2 w-full text-left block hover:underline" onClick={() => setCurrentRoom(getDmRoomId(u.ID))}>
+            WIP {u.ID}
           </button>
         ))}
         </div>
