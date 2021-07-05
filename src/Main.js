@@ -5,13 +5,6 @@ import Message from './components/Message'
 import { useToken } from './auth.js'
 import LoadingSpinner from "./components/LoadingSpinner";
 
-function getDmRoomId(userId) {
-  axios.get(`/rooms/dm/${userId}`).then(res => {
-    console.log(res.data.room_id)
-    return res.data.room_id
-  })
-}
-
 function Main() {
 
   const [roomIds, setRoomIds] = useState([])
@@ -29,6 +22,15 @@ function Main() {
 
   const chatRoomRef = useRef()
 
+  const selectDM = (userId) => {
+    setLoading(true)
+    axios.get(`/rooms/dm/${userId}`).then(res => {
+      setLoading(false)
+      console.log(res.data.room_id)
+      setCurrentRoom(res.data.room_id)
+    })
+  }
+
   const scrollToBottom = () => {
 		chatRoomRef.current.scrollTop = chatRoomRef.current.scrollHeight;
 	};
@@ -41,16 +43,18 @@ function Main() {
     console.log('rooms', rooms)
   }
 
-  if (!user) {
-    axios.get('/whoami').then(res => {
-      setUser(res.data.user)
-    })
-  }
+  // if (!user) {
+  //   axios.get('/whoami').then(res => {
+  //     setUser(res.data.user)
+  //   })
+  // }
 
   //Get list of all users in SquidChat
   if (allUsers && !allUsers.length) {
     axios.get('/users/list').then(res => {
+      setUser(res.data[0])
       setAllUsers(res.data)
+      console.log(res.data)
     })
   }
 
@@ -72,6 +76,7 @@ function Main() {
       setLoading(true)
       axios.get(`/rooms/${currentRoom}/messages`).then(res => {
         setCurrentRoomMessages(res.data.messages)
+        console.log('res.data.messages', res.data.messages)
         scrollToBottom()
         setLoading(false)
       })
@@ -120,8 +125,8 @@ function Main() {
         <p className="p-2 border-b border-gray-300"><strong>DMs</strong></p>
         <div className="border-b border-gray-300">
         {dms && dms.map(u => (
-          <button className="p-2 w-full text-left block hover:underline" onClick={() => setCurrentRoom(getDmRoomId(u.ID))}>
-            WIP {u.ID}
+          <button className="p-2 w-full text-left block hover:underline" onClick={() => selectDM(u.ID)}>
+            {u.username}
           </button>
         ))}
         </div>

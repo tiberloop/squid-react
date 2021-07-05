@@ -3,19 +3,19 @@ import axios from "axios";
 
 function Message(props) {
   const { message, index } = props
-  // const [src, setSrc] = useState('')
+  const [src, setSrc] = useState('')
 
-  // if (index == 1 ) {
-  //     axios.get(`/avatar/6576996505964455225`).then(res => {
-  //     console.log(res.data)
-  //     setSrc(res.data)
-  //   })
-  // }
+  if (index === 1 ) {
+      axios.get("uploads/0803_florida-recount.jpg").then(res => {
+      console.log(res.data)
+      setSrc(res.data)
+    })
+  }
 
   return (
   <div className={`p-1 ${(index % 2) && 'bg-gray-100'}`}>
     {/* <div className="bg-green-300" style={{ height: '32px', width: '32px' }}></div> */}
-    {/* <img src='https://squid.chat/avatar/6576996505964455225' style={{ height: '32px', width: '32px' }} /> */}
+    <img src={src} style={{ height: '32px', width: '32px' }} />
     <p><strong>{message.username}</strong> <i>{message.time_sent}</i></p>
     <p>
       {message.text}
