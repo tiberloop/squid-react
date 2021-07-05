@@ -5,29 +5,34 @@ import {
   Switch,
   Route,
   Redirect,
-  useHistory
+  useHistory,
+  Link
 } from "react-router-dom";
 import { useToken } from './auth.js'
 import './App.css';
 import Login from './Login'
 import Main from "./Main.js";
+import Profile from './Profile.js'
 
 function App() {
   const version = "0.2"
 
   const loggedIn = useToken() || false
-  console.log('loggedIn', loggedIn)
-  const history = useHistory()
-  const logout = () => {
-    localStorage.removeItem('jwt')
-    history.push('/login')
-  }
 
   return (
     <div className="max-h-screen min-h-screen w-full flex flex-col bg-blue-50">
-      <p className="p-2 bg-white flex justify-between">
-        <code>squid.chat <span className="text-gray-300">{version}</span></code>
-        {loggedIn && (<button type="button" onClick={() => { logout() }}><code>log out</code></button>)}
+      <p className="bg-white flex justify-between">
+        <Link to="/" className="flex p-2 hover:bg-blue-100">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <span className="ml-1">Chat</span>
+        </Link>
+        <code className="p-2 select-none">squid.chat <span className="text-gray-300">{version}</span></code>
+        {loggedIn && (
+          <Link to="/profile" className="flex p-2 hover:bg-blue-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span className="ml-1">Profile</span>
+          </Link>
+        )}
       </p>
       <Switch>
         {/* If the current URL is /about, this route is rendered
@@ -39,14 +44,8 @@ function App() {
         {/* Note how these two routes are ordered. The more specific
             path="/contact/:id" comes before path="/contact" so that
             route will render when viewing an individual contact */}
-        <PrivateRoute path="/dashboard">
-          <h3>dashboard</h3>
-        </PrivateRoute>
-        <PrivateRoute path="/contact/:id">
-          contact
-        </PrivateRoute>
-        <PrivateRoute path="/contact">
-          contactsSSS
+        <PrivateRoute path="/profile">
+          <Profile />
         </PrivateRoute>
 
         {/* If none of the previous routes render anything,
