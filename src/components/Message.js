@@ -5,12 +5,12 @@ function Message(props) {
   const { message, index } = props
   const [src, setSrc] = useState('https://res.cloudinary.com/dk-find-out/image/upload/q_70,c_pad,w_1200,h_630,f_auto/DCTM_Penguin_UK_DK_AL639403_k3qity.jpg')
 
-  if (index === 1 ) {
-      axios.get("/uploads/squidimage.jpg").then(res => {
-      console.log('image', res.data)
-      setSrc(res.data)
-    })
-  }
+  // if (index === 1 ) {
+  //     axios.get("/uploads/squidimage.jpg").then(res => {
+  //     console.log('image', res.data)
+  //     setSrc(res.data)
+  //   })
+  // }
 
   return (
   <div className={`flex p-1 ${(index % 2) && 'bg-gray-100'}`}>

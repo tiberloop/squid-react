@@ -78,6 +78,27 @@ function Main() {
    };
   }, [currentRoomMessages]);
 
+  const [someonesTyping, setSomeonesTyping] = useState(false)
+
+  useEffect(() => {
+    socket.on('someones_typing', function (data) {
+      console.log('someones_typing')
+      setSomeonesTyping(true)
+    })
+  }, [])
+
+  const [imTyping, setImTyping] = useState(false)
+
+  const type = (message) => {
+    setMessage(message)
+    console.log('message', message)
+    if (!imTyping) { setTimeout(() => { socket.emit('im_not_typing'); console.log('im_not_typing') }, 5000) }
+
+    setImTyping(true)
+    socket.emit('im_typing')
+    console.log('im_typing')
+  }
+
   const sendMessage = () => {
     if (message.length) {
       setMessage('')
@@ -138,12 +159,15 @@ function Main() {
         ))}
       </div>
       <div className="flex-grow flex flex-col">
-        <textarea
-          value={message}
-          onChange={(e) => { setMessage(e.target.value) }}
-          className="border border-gray-200 flex-grow w-full h-full"
-        />
-        <button className="w-full flex-grow border border-gray-300" type="button" onClick={() => { sendMessage(); scrollToBottom() }}>Send Message</button>
+        <div className="p-2 pb-0">
+          <textarea
+            value={message}
+            onChange={(e) => { type(e.target.value) }}
+            className="border border-gray-200 flex-grow w-full h-full"
+          />
+          <button className="w-full flex-grow border border-gray-300" type="button" onClick={() => { sendMessage(); scrollToBottom() }}>Send Message</button>
+        </div>
+        <span className="px-2">{someonesTyping && ('someone is typing...')}</span>
       </div>
     </div>
     {/* <div className="m-1 rounded bg-white p-2 max-w-lg border border-gray-300">

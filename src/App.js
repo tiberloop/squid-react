@@ -15,7 +15,7 @@ import Main from "./Main.js";
 import Profile from './Profile.js'
 
 function App() {
-  const version = "0.2.1"
+  const version = "0.2.2"
 
   const loggedIn = useToken() || false
 
