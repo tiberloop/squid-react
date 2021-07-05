@@ -22,6 +22,16 @@ function Main() {
 
   const chatRoomRef = useRef()
 
+  useEffect(() => {
+    axios.get('/rooms/all').then(res => {
+      setRooms(res.data.rooms || [])
+    })
+    axios.get('/users/list').then(res => {
+      setUser(res.data[0])
+      setAllUsers(res.data)
+    })
+  }, [])
+
   const selectDM = (userId) => {
     setLoading(true)
     axios.get(`/rooms/dm/${userId}`).then(res => {
@@ -35,39 +45,11 @@ function Main() {
 		chatRoomRef.current.scrollTop = chatRoomRef.current.scrollHeight;
 	};
 
-  //Load room data
-  if (!rooms.length) {
-    axios.get('/rooms/all').then(res => {
-      setRooms(res.data.rooms || [])
-    })
-    console.log('rooms', rooms)
-  }
-
-  // if (!user) {
-  //   axios.get('/whoami').then(res => {
-  //     setUser(res.data.user)
-  //   })
-  // }
-
-  //Get list of all users in SquidChat
-  if (allUsers && !allUsers.length) {
-    axios.get('/users/list').then(res => {
-      setUser(res.data[0])
-      setAllUsers(res.data)
-      console.log(res.data)
-    })
-  }
 
   const dms = allUsers && allUsers.filter(u => u.username !== user)
   const channels = rooms && rooms.filter(r => !r.is_dm)
 
   const updateMessages = (message) => {
-    // console.log('currentRoomMessages', currentRoomMessages)
-    // let newMessages = currentRoomMessages
-    // console.log('newMessages', newMessages)
-    // newMessages.push(message)
-    // setCurrentRoomMessages(newMessages)
-
     setCurrentRoomMessages({currentRoomMessages: [...currentRoomMessages, message]});
   }
 
