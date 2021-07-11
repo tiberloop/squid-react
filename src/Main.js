@@ -110,10 +110,9 @@ function Main() {
     if (message.length) {
       setMessage('')
       socket.emit('send_message', {
-          username: user,
+          username: user.username,
           room: currentRoom,
           text: message,
-          include_image: null,
           image_id: null
       })
     }
