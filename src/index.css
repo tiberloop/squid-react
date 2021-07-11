@@ -26,6 +26,13 @@
   background-repeat: repeat;
 }
 
+.squidload {
+  background-image: url("/src/squidload.gif");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #36465d;
+}
+
 /*
 body {
   margin: 0;

@@ -215,8 +215,8 @@ function Main() {
         className="overflow-y-scroll"
       >
         {loading && (
-          <div className="w-full h-full flex justify-center justify-items-center items-center">
-            <LoadingSpinner className="m-auto" />
+          <div className="squidload w-full h-full flex justify-center justify-items-center items-center">
+            {/* <LoadingSpinner className="m-auto" /> */}
           </div>
         )}
         {Boolean(currentRoomMessages) && Boolean(currentRoomMessages.length) && currentRoomMessages.map((m, i) => (
