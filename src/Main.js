@@ -145,7 +145,7 @@ function Main() {
 
   return (
   <div className="flex min-h-full flex-grow border-gray-300">
-    <div className={`flex-grow ${isMobile ? menuOrChat ? 'hidden' : '' : ''}`}>
+    <div className={`${isMobile ? menuOrChat ? 'hidden' : 'flex-grow' : ''}`}>
       <CreateChannelModal open={createChannelOpen} setOpen={setCreateChannelOpen}/>
       <div className={`bg-white  border-l border-r h-auto border-gray-300 ${isMobile ? '' : 'max-w-lg'}`}>
         <p className="flex justify-between border-b border-gray-300">
