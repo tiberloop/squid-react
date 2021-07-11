@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-  useHistory,
+  useParams,
   Link
 } from "react-router-dom";
 import { useToken } from './auth.js'
@@ -15,9 +15,14 @@ import Main from "./Main.js";
 import Profile from './Profile.js'
 
 function App() {
-  const version = "0.2.2"
+  const version = "0.3.0"
+  const params = useParams()
 
-  const loggedIn = useToken() || false
+  const [loggedIn, setLoggedIn] = useState(useToken())
+
+  useEffect(() => {
+    setLoggedIn(localStorage.getItem('jwt'))
+  }, [params])
 
   return (
     <div className="max-h-screen min-h-screen w-full flex flex-col wallpaper bg-gray-700">
