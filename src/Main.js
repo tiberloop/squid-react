@@ -180,9 +180,9 @@ function Main() {
           <textarea
             value={message}
             onChange={(e) => { type(e.target.value) }}
-            className="border border-gray-200 flex-grow w-full"
+            className="border p-1 border-gray-600 bg-gray-100 flex-grow w-full"
           />
-          <button className="w-full flex-grow border border-gray-300" type="button" onClick={() => { sendMessage(); scrollToBottom() }}>Send Message</button>
+          <button className="w-full flex-grow border border-gray-600 hover:bg-gray-200 bg-gray-100" type="button" onClick={() => { sendMessage(); scrollToBottom() }}>Send Message</button>
         </div>
         <span className="px-2 pb-2">{someonesTyping && ('someone is typing...')}</span>
       </div>
