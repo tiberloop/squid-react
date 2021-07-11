@@ -27,7 +27,7 @@ function Login() {
   }
 
   const signup = () => {
-    let param = { username: registerUsername, password: registerPassword, email: registerEmail, fullname: registerName }
+    let param = { username: registerUsername, password: registerPassword, email: registerEmail, name: registerName }
     axios.post(
       '/signup',
       param,
