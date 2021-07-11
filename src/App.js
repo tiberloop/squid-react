@@ -20,15 +20,15 @@ function App() {
   const loggedIn = useToken() || false
 
   return (
-    <div className="max-h-screen min-h-screen w-full flex flex-col bg-blue-50">
-      <p className="bg-white flex justify-between">
-        <Link to="/" className="flex p-2 hover:bg-blue-100">
+    <div className="max-h-screen min-h-screen w-full flex flex-col wallpaper bg-gray-700">
+      <p className="bg-white flex justify-between border-b border-gray-300">
+        <Link to="/" className="flex p-2 hover:bg-gray-200">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           <span className="ml-1">Chat</span>
         </Link>
         <code className="p-2 select-none">squid.chat <span className="text-gray-300">{version}</span></code>
         {loggedIn && (
-          <Link to="/profile" className="flex p-2 hover:bg-blue-100">
+          <Link to="/profile" className="flex p-2 hover:bg-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <span className="ml-1">Profile</span>
           </Link>

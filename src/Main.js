@@ -4,8 +4,10 @@ import { socket } from "./socket";
 import Message from './components/Message'
 import { useToken } from './auth.js'
 import LoadingSpinner from "./components/LoadingSpinner";
+import CreateChannelModal from "./components/CreateChannelModal";
 
 function Main() {
+  const [createChannelOpen, setCreateChannelOpen] = useState(false)
 
   const [roomIds, setRoomIds] = useState([])
   const [rooms, setRooms] = useState([])
@@ -114,10 +116,16 @@ function Main() {
   }
 
   return (
-  <div className="flex border min-h-full flex-grow border-gray-300">
+  <div className="flex min-h-full flex-grow border-gray-300">
     <div>
-      <div className="m-1 rounded bg-white max-w-lg border h-auto border-gray-300">
-        <p className="p-2 border-b border-gray-300"><strong>Channels</strong></p>
+      <CreateChannelModal open={createChannelOpen} setOpen={setCreateChannelOpen}/>
+      <div className="bg-white max-w-lg border-l border-r h-auto border-gray-300">
+        <p className="flex justify-between border-b border-gray-300">
+          <strong className="p-2">Channels</strong>
+          <button onClick={() => setCreateChannelOpen(true)} className="px-2 hover:bg-gray-200">
+            +
+          </button>
+        </p>
         <div className="border-b border-gray-300">
         {channels && channels.map(r => (
           <button className="p-2 w-full text-left block hover:underline" onClick={() => setCurrentRoom(r.room_id)}>
@@ -141,7 +149,7 @@ function Main() {
 
 
 
-    <div className="m-1 rounded bg-white flex flex-grow border flex-col border-gray-300">
+    <div className="bg-white flex flex-grow flex-col border-gray-300">
       <p className="p-2 border-b border-gray-300">{rooms.find(r => r.room_id === currentRoom)?.name || 'No room selected'}</p>
       <div
         id="messages"
