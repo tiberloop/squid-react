@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
-import { handleSuccesssfulLogin } from './auth.js'
+import { format } from 'date-fns'
 import SmallLoadingSpinner from "./components/SmallLoadingSpinner.js";
 
 function Profile() {
@@ -54,7 +54,7 @@ function Profile() {
                     Date Joned
                   </label>
                   <div class="mt-1 flex w-full rounded-md shadow-sm">
-                    <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >October 5, 2019</div>
+                    <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user ? user.date_joined ? format(new Date(user.date_joined), 'p') : '' : <SmallLoadingSpinner />}</div>
                   </div>
                 </div>
               </div>
