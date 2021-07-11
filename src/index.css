@@ -27,10 +27,10 @@
 }
 
 .squidload {
-  background-image: url("/src/squidload.gif");
+  background-image: url("/src/squid29.gif");
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #36465d;
+  /* background-color: #36465d; */
 }
 
 /*

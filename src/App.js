@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,11 +7,19 @@ import {
   useParams,
   Link
 } from "react-router-dom";
+import { createStore, useStore } from './store/reactive'
 import { useToken } from './auth.js'
+import axios from 'axios'
+
 import './App.css';
 import Login from './Login'
 import Main from "./Main.js";
 import Profile from './Profile.js'
+
+createStore({
+  users: [],
+  avatars: []
+})
 
 function App() {
   const version = "0.4.0"
@@ -23,6 +30,31 @@ function App() {
   useEffect(() => {
     setLoggedIn(localStorage.getItem('jwt'))
   }, [params])
+
+  const [users, setUsers] = useStore('users')
+  const [avatars, setAvatars] = useStore('avatars')
+
+  useEffect(() => {
+    axios.get('/users/list').then(res => {
+      console.log('USERS', res.data)
+      setUsers(res.data)
+    })
+  }, [])
+
+  useEffect(() => {
+    let avatarsCollection = []
+
+    users.forEach(u => {
+      if (u.avatar) {
+        axios.get(`/avatar/${u.ID}`, { responseType: "blob" }).then(res => {
+          avatarsCollection.push({ userId: u.ID, src: res.data})
+        })
+        .catch(e => console.log(e))
+      }
+    })
+
+    setTimeout(() => { setAvatars(avatarsCollection) }, 2000) 
+  }, [users])
 
   return (
     <div className="max-h-screen min-h-screen w-full flex flex-col wallpaper bg-gray-700">

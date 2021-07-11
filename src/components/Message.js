@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useStore } from '../store/reactive'
 import axios from "axios";
 import { format } from 'date-fns'
 import UserCardModal from "./UserCardModal";
@@ -16,7 +17,13 @@ function Message(props) {
   //   })
   // }
 
-  
+  const [avatars, setAvatars] = useStore('avatars')
+
+  useEffect(() => {
+    const avatar = avatars.find(a => a.userId === message.user_id)
+    if (avatar) { setSrc(URL.createObjectURL(avatar.src)) }
+  }, [avatars])
+
 
   const timeSentFormatted = format(new Date(message.time_sent), 'p')
 
@@ -24,7 +31,7 @@ function Message(props) {
   <div className={`flex p-1 ${(index % 2) && 'bg-gray-100'}`}>
     <UserCardModal open={open} setOpen={setOpen} userId={message.user_id} />
     <div onClick={() => setOpen(true)} className="rounded">
-      <img src={src} alt="Avatar" style={{ height: '32px', width: '32px' }} />
+      <img className="rounded object-cover" src={src} alt="Avatar" style={{ height: '32px', width: '32px' }} />
     </div>
     <div className="ml-1">
       <p><strong className="hover:underline cursor-pointer" onClick={() => setOpen(true)}>{message.username}</strong> <small>{timeSentFormatted}</small></p>
