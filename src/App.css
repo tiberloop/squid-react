@@ -115,3 +115,23 @@
     opacity: 0;
   }
 }
+
+/* SmallLoadingSpinner.js */
+.gear {
+  animation-name: ckw;
+  animation-duration: 3s;
+  /* Things added */
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+  display: inline-block;
+  animation-timing-function: linear;
+  /* <--- */
+}
+@keyframes ckw {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
