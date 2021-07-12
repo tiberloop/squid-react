@@ -33,8 +33,7 @@ function Login() {
       param,
     )
       .then(res => {
-        handleSuccesssfulLogin(res.data.Token)
-        history.push('/')
+        setLoginOrSignup(true)
       })
   }
 
@@ -46,11 +45,11 @@ function Login() {
         <h1 className="text-xl mb-8">Login</h1>
         <label className="flex mb-2 items-center">
         <span className="mr-2">Username</span>
-          <input className="flex-grow p-1 border border-gray-200" onChange={(e) => { setUsername(e.target.value) }} type="text" id="username" />
+          <input className="flex-grow p-1 border border-gray-200" value={username} onChange={(e) => { setUsername(e.target.value) }} type="text" id="username" />
         </label>
         <label className="mb-2 flex items-center">
           <span className="mr-2">Password</span>
-          <input className="flex-grow p-1 border border-gray-200" onChange={(e) => { setPassword(e.target.value) }} type="password" id="password" />
+          <input className="flex-grow p-1 border border-gray-200" value={password} onChange={(e) => { setPassword(e.target.value) }} type="password" id="password" />
         </label>
         <div className="flex mt-8 justify-between items-center">
           <button className="p-1 px-3 rounded hover:bg-blue-800 bg-blue-900 text-white" type="button" onClick={() => login()}>
@@ -68,19 +67,19 @@ function Login() {
         <h1 className="text-xl mb-8">Sign Up</h1>
         <label className="flex mb-2 items-center">
         <span className="mr-2">Username</span>
-          <input className="flex-grow p-1 border border-gray-200" onChange={(e) => { setRegisterUsername(e.target.value) }} type="text" id="registerUsername" />
+          <input className="flex-grow p-1 border border-gray-200" value={registerUsername} onChange={(e) => { setRegisterUsername(e.target.value) }} type="text" id="registerUsername" />
         </label>
         <label className="mb-2 flex items-center">
           <span className="mr-2">Password</span>
-          <input className="flex-grow p-1 border border-gray-200" onChange={(e) => { setRegisterPassword(e.target.value) }} type="password" id="registerPassword" />
+          <input className="flex-grow p-1 border border-gray-200" value={registerPassword} onChange={(e) => { setRegisterPassword(e.target.value) }} type="password" id="registerPassword" />
         </label>
         <label className="mb-2 flex items-center">
           <span className="mr-2">Email</span>
-          <input className="flex-grow p-1 border border-gray-200" onChange={(e) => { setRegisterEmail(e.target.value) }} type="email" id="registerEmail" />
+          <input className="flex-grow p-1 border border-gray-200" value={registerEmail} onChange={(e) => { setRegisterEmail(e.target.value) }} type="email" id="registerEmail" />
         </label>
         <label className="mb-2 flex items-center">
           <span className="mr-2">Full Name</span>
-          <input className="flex-grow p-1 border border-gray-200" onChange={(e) => { setRegisterName(e.target.value) }} type="text" id="registerName" />
+          <input className="flex-grow p-1 border border-gray-200" value={registerName} onChange={(e) => { setRegisterName(e.target.value) }} type="text" id="registerName" />
         </label>
         <div className="flex mt-8 justify-between items-center">
           <button className="p-1 px-3 rounded hover:bg-blue-800 bg-blue-900 text-white" type="button" onClick={() => signup()}>

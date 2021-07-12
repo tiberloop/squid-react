@@ -35,11 +35,13 @@ function App() {
   const [avatars, setAvatars] = useStore('avatars')
 
   useEffect(() => {
-    axios.get('/users/list').then(res => {
-      console.log('USERS', res.data)
-      setUsers(res.data)
-    })
-  }, [])
+    if (loggedIn) {
+      axios.get('/users/list').then(res => {
+        console.log('USERS', res.data)
+        setUsers(res.data)
+      })
+    }
+  }, [loggedIn])
 
   useEffect(() => {
     let avatarsCollection = []
