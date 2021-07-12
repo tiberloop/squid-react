@@ -95,21 +95,20 @@ function Main() {
     })
   }, [])
 
-  const [imTyping, setImTyping] = useState(false)
+  // const [imTyping, setImTyping] = useState(false)
 
   const type = (message) => {
     setMessage(message)
-    console.log('message', message)
-    if (!imTyping) { setTimeout(() => { socket.emit('im_not_typing'); console.log('im_not_typing') }, 5000) }
+    // console.log('message', message)
+    // if (!imTyping) { setTimeout(() => { socket.emit('im_not_typing'); console.log('im_not_typing') }, 5000) }
 
-    setImTyping(true)
-    socket.emit('im_typing')
-    console.log('im_typing')
+    // setImTyping(true)
+    // socket.emit('im_typing')
+    // console.log('im_typing')
   }
 
   const sendMessage = () => {
     if (message.length) {
-      setMessage('')
       socket.emit('send_message', {
           username: user.username,
           room: currentRoom,
@@ -118,6 +117,13 @@ function Main() {
       })
     }
     scrollToBottom()
+    setMessage('')
+  }
+
+  const onEnterPress = (e) => {
+    if(e.keyCode === 13 && e.shiftKey === false) {
+      sendMessage()
+    }
   }
 
   const [dimensions, setDimensions] = useState({
@@ -227,6 +233,7 @@ function Main() {
         <div className="p-2 pb-0">
           <textarea
             value={message}
+            onKeyDown={onEnterPress}
             onChange={(e) => { type(e.target.value) }}
             className="border p-1 border-gray-600 bg-gray-100 flex-grow w-full"
           />
