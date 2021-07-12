@@ -65,7 +65,7 @@ function Main() {
     if (currentRoom) {
       setLoading(true)
       axios.get(`/rooms/${currentRoom}/messages`).then(res => {
-        setCurrentRoomMessages(res.data.messages)
+        setCurrentRoomMessages(res.data.messages.reverse())
         console.log('res.data.messages', res.data.messages)
         scrollToBottom()
         setLoading(false)
