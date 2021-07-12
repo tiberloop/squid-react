@@ -53,7 +53,8 @@ function Main() {
 	};
 
 
-  const dms = allUsers && allUsers.filter(u => u.username !== user)
+  const dms = allUsers && allUsers.slice(1, allUsers.length)
+  console.log('dms', dms)
   const channels = rooms && rooms.filter(r => !r.is_dm)
 
   const updateMessages = (message) => {
