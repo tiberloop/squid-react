@@ -1,5 +1,16 @@
+:root {
+	--bg-color: #fff;
+	--text-color: #000;
+	--bg-dark-mode-color: #1c1b22;
+	--bg-dark-mode-contrast: #333336;
+	
+}
+
+
 .App {
   text-align: center;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 .App-logo {
@@ -134,4 +145,13 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+[data-theme="dark"] {
+	--bg-color: #3F3F3F;
+	--text-color: #fff;
+}
+
+.dark-theme-background {
+	background-color: var(--bg-color);
 }
