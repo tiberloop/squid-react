@@ -4,7 +4,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useStore } from '../store/reactive'
 import axios from 'axios'
 
-export default function UserCardModal(props) {
+export default function UserCardModal(props: any) {
   const {open, setOpen, userId} = props
   // const [open, setOpen] = useState(true)
 
@@ -13,7 +13,7 @@ export default function UserCardModal(props) {
   const [src, setSrc] = useState('https://res.cloudinary.com/dk-find-out/image/upload/q_70,c_pad,w_1200,h_630,f_auto/DCTM_Penguin_UK_DK_AL639403_k3qity.jpg')
   const [users, setUsers] = useStore('users')
 
-  const user = users.find(u => u.ID === userId)
+  const user = users.find((u: any) => u.ID === userId)
 
   useEffect(() => {
     if (open && user.avatar) {
@@ -81,28 +81,28 @@ export default function UserCardModal(props) {
                       {user.username}
                     </Dialog.Title>
                     <div className="mt-2">
-                      <div class="grid grid-cols-3 gap-6">
-                        <div class="col-span-3 sm:col-span-2">
-                          <label for="channel-name" class="block text-sm font-medium text-gray-700">
+                      <div className="grid grid-cols-3 gap-6">
+                        <div className="col-span-3 sm:col-span-2">
+                          <label htmlFor="channel-name" className="block text-sm font-medium text-gray-700">
                             Full Name
                           </label>
-                          <div class="mt-1 flex w-full rounded-md shadow-sm">
+                          <div className="mt-1 flex w-full rounded-md shadow-sm">
                             <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user.real_name}</div>
                           </div>
                         </div>
-                        <div class="col-span-3 sm:col-span-2">
-                          <label for="channel-name" class="block text-sm font-medium text-gray-700">
+                        <div className="col-span-3 sm:col-span-2">
+                          <label htmlFor="channel-name" className="block text-sm font-medium text-gray-700">
                             Email
                           </label>
-                          <div class="mt-1 flex w-full rounded-md shadow-sm">
+                          <div className="mt-1 flex w-full rounded-md shadow-sm">
                             <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user.email}</div>
                           </div>
                         </div>
-                        <div class="col-span-3 sm:col-span-2">
-                          <label for="channel-name" class="block text-sm font-medium text-gray-700">
+                        <div className="col-span-3 sm:col-span-2">
+                          <label htmlFor="channel-name" className="block text-sm font-medium text-gray-700">
                             Date Joined
                           </label>
-                          <div class="mt-1 flex w-full rounded-md shadow-sm">
+                          <div className="mt-1 flex w-full rounded-md shadow-sm">
                             <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user.date_joined}</div>
                           </div>
                         </div>

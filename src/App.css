@@ -116,7 +116,7 @@
   }
 }
 
-/* SmallLoadingSpinner.js */
+/* SmallLoadingSpinner.tsx */
 .gear {
   animation-name: ckw;
   animation-duration: 3s;

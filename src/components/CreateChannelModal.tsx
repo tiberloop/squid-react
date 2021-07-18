@@ -3,7 +3,7 @@ import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import axios from 'axios'
 
-export default function CreateChannelModal(props) {
+export default function CreateChannelModal(props: any) {
   const {open, setOpen} = props
   // const [open, setOpen] = useState(true)
 
@@ -64,13 +64,13 @@ export default function CreateChannelModal(props) {
                       Create Channel
                     </Dialog.Title>
                     <div className="mt-2">
-                      <div class="grid grid-cols-3 gap-6">
-                        <div class="col-span-3 sm:col-span-2">
-                          <label for="channel-name" class="block text-sm font-medium text-gray-700">
+                      <div className="grid grid-cols-3 gap-6">
+                        <div className="col-span-3 sm:col-span-2">
+                          <label htmlFor="channel-name" className="block text-sm font-medium text-gray-700">
                             Name
                           </label>
-                          <div class="mt-1 flex w-full rounded-md shadow-sm">
-                            <input onChange={(e) => { setNewName(e.target.value) }} type="text" name="channel-name" id="channel-name" class="focus:ring-indigo-500 focus:border-indigo-500 p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" placeholder="New Channel" />
+                          <div className="mt-1 flex w-full rounded-md shadow-sm">
+                            <input onChange={(e) => { setNewName(e.target.value) }} type="text" name="channel-name" id="channel-name" className="focus:ring-indigo-500 focus:border-indigo-500 p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" placeholder="New Channel" />
                           </div>
                         </div>
                       </div>

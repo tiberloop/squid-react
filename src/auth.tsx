@@ -5,7 +5,7 @@ export function useToken() {
   return token
 }
 
-export function handleSuccesssfulLogin(token) {
+export function handleSuccesssfulLogin(token: string) {
     localStorage.setItem('jwt', token)
     handleAuthentication(token)
 }
@@ -19,6 +19,6 @@ export async function checkAuthentication() {
     return false
   }
 
-export function handleAuthentication(token) {
+export function handleAuthentication(token: string) {
     axios.defaults.headers.common['tasty_token'] = `Bearer ${token}`
 }

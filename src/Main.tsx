@@ -2,27 +2,27 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { socket } from "./socket";
 import Message from './components/Message'
-import { useToken } from './auth.js'
+import { useToken } from './auth'
 import LoadingSpinner from "./components/LoadingSpinner";
 import CreateChannelModal from "./components/CreateChannelModal";
 
 function Main() {
   const [createChannelOpen, setCreateChannelOpen] = useState(false)
 
-  const [roomIds, setRoomIds] = useState([])
-  const [rooms, setRooms] = useState([])
-  const [allUsers, setAllUsers] = useState([])
-  const [messagesDict, setMessagesDict] = useState({})
+  const [roomIds, setRoomIds] = useState<any>([])
+  const [rooms, setRooms] = useState<any>([])
+  const [allUsers, setAllUsers] = useState<any>([])
+  const [messagesDict, setMessagesDict] = useState<any>({})
 
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<any>(null)
 
-  const [currentRoom, setCurrentRoom] = useState(null)
-  const [currentRoomMessages, setCurrentRoomMessages] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [currentRoom, setCurrentRoom] = useState<any>(null)
+  const [currentRoomMessages, setCurrentRoomMessages] = useState<any>([])
+  const [loading, setLoading] = useState<any>(false)
 
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState<any>('')
 
-  const chatRoomRef = useRef()
+  const chatRoomRef: any = useRef<HTMLInputElement>();
 
   useEffect(() => {
     axios.get('/rooms/all').then(res => {
@@ -34,7 +34,7 @@ function Main() {
     })
   }, [])
 
-  const selectDM = (userId) => {
+  const selectDM = (userId: any) => {
     setLoading(true)
     axios.get(`/rooms/dm/${userId}`).then(res => {
       setLoading(false)
@@ -43,21 +43,24 @@ function Main() {
     })
   }
 
-  const selectChat = (roomId) => {
+  const selectChat = (roomId: any) => {
     setCurrentRoom(roomId)
     setMenuOrChat(true)
   }
 
   const scrollToBottom = () => {
+      if (chatRoomRef && chatRoomRef.current){
+        
 		chatRoomRef.current.scrollTop = chatRoomRef.current.scrollHeight;
+      }
 	};
 
 
   const dms = allUsers && allUsers.slice(1, allUsers.length)
   console.log('dms', dms)
-  const channels = rooms && rooms.filter(r => !r.is_dm)
+  const channels = rooms && rooms.filter((r: any) => !r.is_dm)
 
-  const updateMessages = (message) => {
+  const updateMessages = (message: any) => {
     setCurrentRoomMessages({currentRoomMessages: [...currentRoomMessages, message]});
   }
 
@@ -65,6 +68,7 @@ function Main() {
     if (currentRoom) {
       setLoading(true)
       axios.get(`/rooms/${currentRoom}/messages`).then(res => {
+				debugger;
         setCurrentRoomMessages(res.data.messages.reverse())
         console.log('res.data.messages', res.data.messages)
         scrollToBottom()
@@ -75,7 +79,8 @@ function Main() {
   }, [currentRoom])
 
   useEffect(() => {
-    socket.on('receive_message', function (data) {
+    socket.on('receive_message', function (data: any) {
+      debugger;
       console.log('RECEIVE_MESSAGE', data);
       setCurrentRoomMessages([...currentRoomMessages, data]);
       scrollToBottom()
@@ -89,7 +94,7 @@ function Main() {
   const [someonesTyping, setSomeonesTyping] = useState(false)
 
   useEffect(() => {
-    socket.on('someones_typing', function (data) {
+    socket.on('someones_typing', function (data: any) {
       console.log('someones_typing')
       setSomeonesTyping(true)
     })
@@ -97,7 +102,7 @@ function Main() {
 
   // const [imTyping, setImTyping] = useState(false)
 
-  const type = (message) => {
+  const type = (message: string) => {
     setMessage(message)
     // console.log('message', message)
     // if (!imTyping) { setTimeout(() => { socket.emit('im_not_typing'); console.log('im_not_typing') }, 5000) }
@@ -120,7 +125,7 @@ function Main() {
     setMessage('')
   }
 
-  const onEnterPress = (e) => {
+  const onEnterPress = (e: any) => {
     if(e.keyCode === 13 && e.shiftKey === false) {
       sendMessage()
     }
@@ -132,20 +137,22 @@ function Main() {
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640)
   const [menuOrChat, setMenuOrChat] = useState(false)
-
-  useEffect(() => {
+  const doStuff = () => {
     function handleResize() {
-      setDimensions({
-        width: window.innerWidth,
-      });
-
-      setIsMobile(dimensions.width <= 640)
-    }
-    window.addEventListener('resize', handleResize);
-
-    return _ => {
-      window.removeEventListener('resize', handleResize);
-    };
+        setDimensions({
+          width: window.innerWidth,
+        });
+  
+        setIsMobile(dimensions.width <= 640)
+      }
+      window.addEventListener('resize', handleResize);
+  
+      return (_: any) => {
+        window.removeEventListener('resize', handleResize);
+      };
+  }
+  useEffect(() => {
+    doStuff();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dimensions.width]);
 
@@ -158,13 +165,13 @@ function Main() {
           <strong className="p-2">Channels</strong>
           <div className="flex">
           <button onClick={() => setCreateChannelOpen(true)} className="px-2 hover:bg-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </button>
           {currentRoom && isMobile && (
           <button onClick={() => setMenuOrChat(true)} className="px-2 hover:bg-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </button>
@@ -172,7 +179,7 @@ function Main() {
           </div>
         </p>
         <div className="border-b border-gray-300">
-        {channels && channels.map(r => (
+        {channels && channels.map((r: any) => (
           <button className="p-2 w-full text-left block hover:underline" onClick={() => selectChat(r.room_id)}>
             #{r.name}
           </button>
@@ -180,7 +187,7 @@ function Main() {
         </div>
         <p className="p-2 border-b border-gray-300"><strong>DMs</strong></p>
         <div className="border-b border-gray-300">
-        {dms && dms.map(u => (
+        {dms && dms.map((u: any) => (
           <button className="p-2 w-full text-left block hover:underline" onClick={() => selectDM(u.ID)}>
             {u.username}
           </button>
@@ -201,15 +208,15 @@ function Main() {
         <div className="flex">
           {isMobile && (
           <button className="p-2 hover:bg-gray-200" onClick={() => setMenuOrChat(false)}>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           )}
-          <span className="p-2">{rooms.find(r => r.room_id === currentRoom)?.name || 'No room selected'}</span>
+          <span className="p-2">{rooms.find((r: any) => r.room_id === currentRoom)?.name || 'No room selected'}</span>
         </div>
         <button className="p-2 hover:bg-gray-200">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </button>
@@ -225,7 +232,7 @@ function Main() {
             {/* <LoadingSpinner className="m-auto" /> */}
           </div>
         )}
-        {Boolean(currentRoomMessages) && Boolean(currentRoomMessages.length) && currentRoomMessages.map((m, i) => (
+        {Boolean(currentRoomMessages) && Boolean(currentRoomMessages.length) && currentRoomMessages.map((m: any, i: any) => (
           <Message message={m} index={i} />
         ))}
       </div>

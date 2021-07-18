@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
-import { handleSuccesssfulLogin } from './auth.js'
+import { handleSuccesssfulLogin } from './auth'
 
 function Login() {
   const [username, setUsername] = useState('')

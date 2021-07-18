@@ -8,7 +8,7 @@ import io from "socket.io-client";
 // FOR LOCAL SOCKETS USE "http://127.0.0.1:5000"
 // FOR PROD I THINK "https://squid.chat"
 
-export const socket = io.connect("https://squid.chat"  , {
+export const socket: any = io("https://squid.chat"  , {
   extraHeaders: {
     tasty_token: `Bearer ${localStorage.getItem('jwt')}`
   }

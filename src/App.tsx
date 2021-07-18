@@ -3,18 +3,19 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+	RouteProps,
   Redirect,
   useParams,
   Link
 } from "react-router-dom";
 import { createStore, useStore } from './store/reactive'
-import { useToken } from './auth.js'
+import { useToken } from './auth'
 import axios from 'axios'
 
 import './App.css';
 import Login from './Login'
-import Main from "./Main.js";
-import Profile from './Profile.js'
+import Main from "./Main";
+import Profile from './Profile'
 
 createStore({
   users: [],
@@ -44,9 +45,9 @@ function App() {
   }, [loggedIn])
 
   useEffect(() => {
-    let avatarsCollection = []
+    let avatarsCollection: any = []
 
-    users.forEach(u => {
+    users.forEach((u: any) => {
       if (u.avatar) {
         axios.get(`/avatar/${u.ID}`, { responseType: "blob" }).then(res => {
           avatarsCollection.push({ userId: u.ID, src: res.data})
@@ -101,14 +102,20 @@ function App() {
   );
 }
 
-function PrivateRoute({ children, ...rest }) {
-  const loggedIn = useToken()
+interface PrivateRouteProps extends RouteProps {
+	// tslint:disable-next-line:no-any
+	children: any;
+}
+
+const PrivateRoute = (props: PrivateRouteProps) => {
+	const { children : Children, ...rest } = props;
+  const loggedIn = useToken();
   return (
     <Route
       {...rest}
       render={({ location }) =>
         loggedIn ? (
-          children
+          Children
         ) : (
           <Redirect
             to={{

@@ -4,7 +4,7 @@ import axios from "axios";
 import { format } from 'date-fns'
 import UserCardModal from "./UserCardModal";
 
-function Message(props) {
+function Message(props: any) {
   const { message, index } = props
   
   const [src, setSrc] = useState('https://res.cloudinary.com/dk-find-out/image/upload/q_70,c_pad,w_1200,h_630,f_auto/DCTM_Penguin_UK_DK_AL639403_k3qity.jpg')
@@ -20,7 +20,7 @@ function Message(props) {
   const [avatars, setAvatars] = useStore('avatars')
 
   useEffect(() => {
-    const avatar = avatars.find(a => a.userId === message.user_id)
+    const avatar = avatars.find((a: any) => a.userId === message.user_id)
     if (avatar) { setSrc(URL.createObjectURL(avatar.src)) }
   }, [avatars])
 
