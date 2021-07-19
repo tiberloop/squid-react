@@ -95,7 +95,7 @@ function App() {
         {/* If the current URL is /about, this route is rendered
             while the rest are ignored */}
         <Route path="/login">
-          {loggedIn ? <Redirect to="/home" /> : <Login />}
+          {loggedIn ? <Redirect to="/" /> : <Login />}
         </Route>
 
         {/* Note how these two routes are ordered. The more specific
