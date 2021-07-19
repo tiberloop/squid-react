@@ -243,7 +243,6 @@ function Main() {
           id="messages"
           ref={chatRoomRef}
           style={{ flexGrow: 5 }}
-          // className="overflow-y-scroll"
         >
           {loading && (
             <div className="squidload w-full h-full flex justify-center justify-items-center items-center">
