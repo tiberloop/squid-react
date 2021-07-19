@@ -82,7 +82,7 @@ function App() {
             Toggle Dark Mode
           </button>
         </div>
-        <code className="p-2 select-none">squid.chat <span className="text-gray-300">{version}</span></code>
+        <code className="p-2 select-none">SquidChat <span className="text-gray-300">{version}</span></code>
 				
         {loggedIn && (
           <Link to="/profile" className="flex p-2 hover:bg-gray-200">
