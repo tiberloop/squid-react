@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
-import { handleSuccesssfulLogin } from './auth.js'
+import { handleSuccesssfulLogin } from './auth'
 
 function Login() {
   const [username, setUsername] = useState('')
@@ -38,7 +38,7 @@ function Login() {
   }
 
   return (
-    <div className="p-5 mt-16 border border-gray-8 bg-white rounded mx-auto" style={{ maxWidth: '400px' }}>
+    <div className="p-5 mt-16 border border-gray-8 bg-white dark:bg-primaryDark rounded mx-auto" style={{ maxWidth: '400px' }}>
       {loginOrSignup ?
       (
       <form className="mx-auto" onSubmit={(e) => e.preventDefault()}>

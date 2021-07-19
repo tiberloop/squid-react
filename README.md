@@ -1,12 +1,32 @@
-# Getting Started with Create React App
+# Getting Started with SquidChat front end
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Dependencies
+You will need the following packages and versions installed on your local development machine:
+
+* [Node.js](https://nodejs.org/en/) >= 10
+* [npm] >= 6 _or_ [yarn](https://classic.yarnpkg.com/en/docs/install/#windows-stable) >= 0.25
+
+## Installing Required Packages
+In the project directory, you will need to run the following commands:
+```
+npm install
+```
+- _install required node packages_
+```
+npm install -D tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9 
+```
+- necessary separate install of tailwindcss
+```
+npm install @craco/craco
+```
+- necessary separate install of craco to start app
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `yarn start`
+### `yarn start` _or_ `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
