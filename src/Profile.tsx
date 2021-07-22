@@ -3,14 +3,15 @@ import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { format } from 'date-fns'
 import SmallLoadingSpinner from "./components/SmallLoadingSpinner";
+import { logOut } from "./services/auth";
 
 function Profile() {
   const history = useHistory()
   const [user, setUser] = useState<any>(null)
 
   const logout = () => {
-    localStorage.removeItem('jwt')
-    history.push('/login')
+    logOut();
+    history.push('/login');
   }
 
   useEffect(() => {

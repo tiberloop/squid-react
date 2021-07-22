@@ -155,3 +155,8 @@
 .dark-theme-background {
 	background-color: var(--bg-color);
 }
+
+.full-screen-loader {
+    width: 100vw;
+    height: 100vh;
+}

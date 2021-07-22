@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { socket } from "./socket";
 import Message from './components/Message'
-import { useToken } from './auth'
+import { useToken } from './services/auth'
 import LoadingSpinner from "./components/LoadingSpinner";
 import CreateChannelModal from "./components/CreateChannelModal";
 
@@ -26,7 +26,6 @@ function Main() {
 
   useEffect(() => { // 
     axios.get('/rooms/all').then(res => {
-      // debugger;
       setRooms(res.data.rooms || [])
     })
     axios.get('/users/list').then(res => {
@@ -35,8 +34,29 @@ function Main() {
     })
   }, [])
 
+
+  // function to retrieve dms. currently has issues running locally
   const selectDM = (userId: any) => {
     setLoading(true)
+    // to work in dev:
+    // var myRequest: string = `https://squid.chat/api/rooms/dm/${userId}`;
+    // var token: any = localStorage.getItem("jwt");
+    // var myHeaders = new Headers();
+    // myHeaders.append('tasty_token', token);
+    // var myInit = {
+    //   method: 'GET', headers: myHeaders, mode: 'cors' as RequestMode
+    // }
+    // var myRequest: any = new Request(`https://squid.chat/api/rooms/dm/${userId}`, myInit);
+    // console.log('Requested');
+    // fetch(myRequest).then(function(response) {
+    //   debugger;
+    //   console.log(response.url); // returns https://developer.mozilla.org/en-US/docs/Web/API/Response/flowers.jpg
+    //   // response.blob().then(function(myBlob) {
+    //   //   var objectURL = URL.createObjectURL(myBlob);
+    //   //   myImage.src = objectURL;
+    //   // });
+    // })
+    // })
     axios.get(`/rooms/dm/${userId}`).then(res => {
       setLoading(false)
       console.log(res.data.room_id)
@@ -69,7 +89,6 @@ function Main() {
     if (currentRoom) {
       setLoading(true)
       axios.get(`/rooms/${currentRoom.room_id}/messages`).then(res => {
-        // debugger;
         if (res && res.data) {
           // var messages: string[] = parseMessages(res.data.reverse());
           setCurrentRoomMessages(res.data);
@@ -87,7 +106,6 @@ function Main() {
 
   useEffect(() => {
     socket.on('receive_message', function (data: any) {
-      // debugger;
       console.log('RECEIVE_MESSAGE', data);
       setCurrentRoomMessages([...currentRoomMessages, data]);
       scrollToBottom()
@@ -120,7 +138,6 @@ function Main() {
   }
 
   const sendMessage = () => {
-    debugger;
     if (message.length) {
       socket.emit('send_message', {
         username: user.username,

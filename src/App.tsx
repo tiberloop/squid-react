@@ -9,7 +9,7 @@ import {
   Link
 } from "react-router-dom";
 import { createStore, useStore } from './store/reactive'
-import { useToken } from './auth'
+import { useToken, refreshTokenEvent } from './services/auth'
 import axios from 'axios'
 
 import './assets/css/App.css';
@@ -26,15 +26,34 @@ function App() {
   const version = "0.4.0"
   const params = useParams()
 
-  const [loggedIn, setLoggedIn] = useState(useToken())
+  const [isLoading, setLoading] = useState<boolean>(true);
 
+  const [loggedIn, setLoggedIn] = useState<null | string>(null)
+  
+  // always call for refresh when the app loads
+  useEffect( () => {
+    waitForAuthentication();
+  }, [])
+
+  const waitForAuthentication = () => {
+    refreshTokenEvent().then(() => {
+      setLoggedIn(localStorage.getItem("jwt"));
+      setTimeout(() => {
+        debugger;
+        setLoading(false);
+      }, 21000);
+    })
+  }
+
+  // watch for changes in params
   useEffect(() => {
-    setLoggedIn(localStorage.getItem('jwt'))
+    setLoggedIn(localStorage.getItem("jwt"));
   }, [params])
 
   const [users, setUsers] = useStore('users')
   const [avatars, setAvatars] = useStore('avatars')
 
+  // watch for changes in loggedIn status to load users
   useEffect(() => {
     if (loggedIn) {
       axios.get('/users/list').then(res => {
@@ -44,6 +63,7 @@ function App() {
     }
   }, [loggedIn])
 
+  // watch for changes in users status to load avatar images
   useEffect(() => {
     let avatarsCollection: any = []
 
@@ -59,6 +79,19 @@ function App() {
     setTimeout(() => { setAvatars(avatarsCollection) }, 2000) 
   }, [users]);
 
+  // refresh the jwt, called every 7 minutes
+  const refreshInterval: number = 420000;
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      await refreshTokenEvent().then(() => {
+        console.log('Token Refreshed');
+      })
+    }, refreshInterval);
+  
+    return () => clearInterval(interval); // the unmount function to prevent memory leaks.
+  })
+
+
   // enable dark mode; use localStorage to persist on reload
   const storedTheme = localStorage.getItem("THEME") === "dark" ? "dark" : "light";
   const [theme, setTheme] = useState(storedTheme);
@@ -70,6 +103,9 @@ function App() {
     localStorage.setItem('THEME', theme);
   }, [theme, complementTheme]);
 
+  if (isLoading) {
+    return <div className="squidload full-screen-loader"></div>
+  }
   return ( //data-theme={darkMode ? "dark" : "light"}
     <div className="squid-app max-h-screen min-h-screen w-full flex flex-col wallpaper dark:text-white" >
       <div className="bg-white dark:bg-primaryDark flex justify-between border-b border-gray-300">

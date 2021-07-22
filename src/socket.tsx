@@ -25,6 +25,6 @@ export const socket: any = io("https://squid.chat"  , {
 
 //   });
 
-socket.emit('new_session')
+socket.emit('new_session') // deprecated
 
 // const s = new WebSocket('https://squid.chat/sockets')
