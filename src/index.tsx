@@ -5,7 +5,7 @@ import './assets/css/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { checkAuthentication } from './auth'
+import { checkAuthentication } from './services/auth'
 
 import {
   BrowserRouter as Router,

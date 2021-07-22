@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
-import { handleSuccesssfulLogin } from './auth'
+import { handleSuccesssfulLogin } from './services/auth'
 
 function Login() {
   const [username, setUsername] = useState('')
@@ -21,7 +21,7 @@ function Login() {
       param,
     )
       .then(res => {
-        handleSuccesssfulLogin(res.data.Token)
+        handleSuccesssfulLogin(res.data)
         history.push('/')
       })
   }
@@ -45,11 +45,11 @@ function Login() {
         <h1 className="text-xl mb-8">Login</h1>
         <label className="flex mb-2 items-center">
         <span className="mr-2">Username</span>
-          <input className="flex-grow p-1 border border-gray-200" value={username} onChange={(e) => { setUsername(e.target.value) }} type="text" id="username" />
+          <input className="flex-grow p-1 border border-gray-200 dark:bg-primaryDark" value={username} onChange={(e) => { setUsername(e.target.value) }} type="text" id="username" />
         </label>
         <label className="mb-2 flex items-center">
           <span className="mr-2">Password</span>
-          <input className="flex-grow p-1 border border-gray-200" value={password} onChange={(e) => { setPassword(e.target.value) }} type="password" id="password" />
+          <input className="flex-grow p-1 border border-gray-200 dark:bg-primaryDark" value={password} onChange={(e) => { setPassword(e.target.value) }} type="password" id="password" />
         </label>
         <div className="flex mt-8 justify-between items-center">
           <button className="p-1 px-3 rounded hover:bg-blue-800 bg-blue-900 text-white" type="button" onClick={() => login()}>
