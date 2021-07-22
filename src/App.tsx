@@ -39,9 +39,8 @@ function App() {
     refreshTokenEvent().then(() => {
       setLoggedIn(localStorage.getItem("jwt"));
       setTimeout(() => {
-        debugger;
         setLoading(false);
-      }, 21000);
+      }, 200);
     })
   }
 
