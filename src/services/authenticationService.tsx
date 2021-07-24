@@ -28,7 +28,6 @@ export function handleSuccesssfulLogin(responseBody: any): void {
 
 /** verify that the user has signed in before and the jwt is still valid */
 export async function checkAuthentication(): Promise<boolean> {
-  debugger;
   const token = getToken();
   if (token !== '') { 
     handleAuthentication(token);
