@@ -4,13 +4,14 @@ import axios from 'axios'
 import './assets/css/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+import { Provider } from 'react-redux';
 import { checkAuthentication } from './services/auth'
 
 import {
   BrowserRouter as Router,
 } from "react-router-dom";
 
+import store from './store';
 
 const auth = checkAuthentication()
 
@@ -19,11 +20,13 @@ axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 axios.defaults.baseURL = "https://squid.chat/api/"
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <React.StrictMode>
+      <Router>
+        <App />
+      </Router>
+    </React.StrictMode>
+  </Provider>,
   document.getElementById('root')
 );
 

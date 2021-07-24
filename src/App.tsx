@@ -9,7 +9,7 @@ import {
   Link
 } from "react-router-dom";
 import { createStore, useStore } from './store/reactive'
-import { useToken, refreshTokenEvent } from './services/auth'
+import { getToken, refreshTokenEvent } from './services/auth'
 import axios from 'axios'
 
 import './assets/css/App.css';
@@ -161,7 +161,7 @@ interface PrivateRouteProps extends RouteProps {
 
 const PrivateRoute = (props: PrivateRouteProps) => {
 	const { children : Children, ...rest } = props;
-  const loggedIn = useToken();
+  const loggedIn = getToken();
   return (
     <Route
       {...rest}

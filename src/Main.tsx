@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
-import { socket } from "./socket";
 import Message from './components/Message'
-import { useToken } from './services/auth'
+import { getToken } from './services/auth'
 import LoadingSpinner from "./components/LoadingSpinner";
 import CreateChannelModal from "./components/CreateChannelModal";
 
@@ -104,26 +103,26 @@ function Main() {
     }
   }, [currentRoom])
 
-  useEffect(() => {
-    socket.on('receive_message', function (data: any) {
-      console.log('RECEIVE_MESSAGE', data);
-      setCurrentRoomMessages([...currentRoomMessages, data]);
-      scrollToBottom()
-    })
+  // useEffect(() => {
+  //   socket.on('receive_message', function (data: any) {
+  //     console.log('RECEIVE_MESSAGE', data);
+  //     setCurrentRoomMessages([...currentRoomMessages, data]);
+  //     scrollToBottom()
+  //   })
 
-    return () => {
-      socket.off('receive_message', () => { });
-    };
-  }, [currentRoomMessages]);
+  //   return () => {
+  //     socket.off('receive_message', () => { });
+  //   };
+  // }, [currentRoomMessages]);
 
   const [someonesTyping, setSomeonesTyping] = useState(false)
 
-  useEffect(() => {
-    socket.on('someones_typing', function (data: any) {
-      console.log('someones_typing')
-      setSomeonesTyping(true)
-    })
-  }, [])
+  // useEffect(() => {
+  //   socket.on('someones_typing', function (data: any) {
+  //     console.log('someones_typing')
+  //     setSomeonesTyping(true)
+  //   })
+  // }, [])
 
   // const [imTyping, setImTyping] = useState(false)
 
@@ -139,12 +138,12 @@ function Main() {
 
   const sendMessage = () => {
     if (message.length) {
-      socket.emit('send_message', {
-        username: user.username,
-        room: currentRoom.room_id,
-        text: message,
-        image_id: null
-      })
+      // socket.emit('send_message', {
+      //   username: user.username,
+      //   room: currentRoom.room_id,
+      //   text: message,
+      //   image_id: null
+      // })
     }
     scrollToBottom()
     setMessage('')
@@ -287,5 +286,6 @@ function Main() {
     </div>
   )
 }
+
 
 export default Main;
