@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { format } from 'date-fns'
-import SmallLoadingSpinner from "./components/SmallLoadingSpinner";
-import { logOut } from "./services/auth";
+import SmallLoadingSpinner from "components/helpers/SmallLoadingSpinner";
+import { logOut } from "services/authenticationService";
 
 function Profile() {
   const history = useHistory()

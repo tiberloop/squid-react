@@ -4,8 +4,8 @@ File containing the necessary functions that handle authorization for a user
 
 import axios from 'axios'
 import { Dispatch } from 'redux';
-import { connectSocket } from '../store/socket/actions';
-import store from '../store';
+import { connectSocket } from 'store/socket/actions';
+import store from 'store';
 
 /**  grab the JWT token from local storage */
 export function getToken(): string {
@@ -30,7 +30,7 @@ export function handleSuccesssfulLogin(responseBody: any): void {
 export async function checkAuthentication(): Promise<boolean> {
   debugger;
   const token = getToken();
-  if (token != '') { 
+  if (token !== '') { 
     handleAuthentication(token);
     establishSocketConnection();
     return true 

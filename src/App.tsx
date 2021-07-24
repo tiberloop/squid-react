@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,15 +7,15 @@ import {
   Redirect,
   useParams,
   Link
-} from "react-router-dom";
-import { createStore, useStore } from './store/reactive'
-import { getToken, refreshTokenEvent } from './services/auth'
+} from 'react-router-dom';
+import { createStore, useStore } from 'store/reactive'
+import { getToken, refreshTokenEvent } from 'services/authenticationService'
 import axios from 'axios'
 
-import './assets/css/App.css';
-import Login from './Login'
-import Main from "./Main";
-import Profile from './Profile'
+import 'assets/css/App.css';
+import Login from 'screens/Login'
+import Main from 'screens/Main';
+import Profile from 'screens/Profile';
 
 createStore({
   users: [],

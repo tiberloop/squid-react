@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { useStore } from '../store/reactive'
+import { useStore } from 'store/reactive'
 import axios from 'axios'
 
 export default function UserCardModal(props: any) {

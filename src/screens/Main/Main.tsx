@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
-import Message from './components/Message'
-import { getToken } from './services/auth'
-import LoadingSpinner from "./components/LoadingSpinner";
-import CreateChannelModal from "./components/CreateChannelModal";
+import Message from 'components/Message'
+import { getToken } from 'services/authenticationService'
+import LoadingSpinner from "components/helpers/LoadingSpinner";
+import CreateChannelModal from "components/CreateChannel";
 
 function Main() {
   const [createChannelOpen, setCreateChannelOpen] = useState(false)
