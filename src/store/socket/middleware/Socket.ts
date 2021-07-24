@@ -30,7 +30,6 @@ export default class Socket {
   public connect = (user: string, port: string) => {
     this.user = user;
     this.port = port;
-    debugger;
     // change apiUrl to connect locally
     this.socket = io(apiUrl, {auth: {
       tasty_token: `Bearer ${localStorage.getItem('jwt')}`
