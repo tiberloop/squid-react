@@ -1,34 +1,50 @@
+/**
+File containing the necessary functions that handle authorization for a user
+*/
+
 import axios from 'axios'
+import { Dispatch } from 'redux';
+import { connectSocket } from '../store/socket/actions';
+import store from '../store';
 
-export function useToken() {
+/**  grab the JWT token from local storage */
+export function getToken(): string {
   const token = localStorage.getItem('jwt')
-  return token
+  if (token) return token
+  return ''
 }
 
-export function handleSuccesssfulLogin(responseBody: any) {
-    if (responseBody && responseBody.Token && responseBody.Refresh) {
-      localStorage.setItem('jwt', responseBody.Token);
-      localStorage.setItem('refresh', responseBody.Refresh);
-      handleAuthentication(responseBody.Token);
-    } else {
-      console.log("Error: Unable to retrieve tokens.");
-    }
-}
-
-export async function checkAuthentication() {
-    const token = localStorage.getItem('jwt')
-    if (token) { 
-      handleAuthentication(token)
-      return true 
-    }
-    return false
+/** if a user logs in or creates a new account, call this function after the api returns successful response*/
+export function handleSuccesssfulLogin(responseBody: any): void {
+  if (responseBody && responseBody.Token && responseBody.Refresh) {
+    localStorage.setItem('jwt', responseBody.Token);
+    localStorage.setItem('refresh', responseBody.Refresh);
+    handleAuthentication(responseBody.Token);
+    establishSocketConnection();
+  } else {
+    console.log("Error: Unable to retrieve tokens.");
   }
+}
 
-export function handleAuthentication(token: string) {
+/** verify that the user has signed in before and the jwt is still valid */
+export async function checkAuthentication(): Promise<boolean> {
+  debugger;
+  const token = getToken();
+  if (token != '') { 
+    handleAuthentication(token);
+    establishSocketConnection();
+    return true 
+  }
+  return false
+}
+
+/** Assign the valid JWT token in the header of all axios api calls */
+export function handleAuthentication(token: string): void {
     axios.defaults.headers.common['tasty_token'] = `Bearer ${token}`
 }
 
-export async function refreshTokenEvent() {
+/** makes calls to api to refresh the jwt token */
+export async function refreshTokenEvent(): Promise<void> {
   var refreshToken: any = localStorage.getItem('refresh'); // TODO: store refresh in cookie
   // TODO: add check to see if refresh token has expired
   if (refreshToken) {
@@ -50,12 +66,29 @@ export async function refreshTokenEvent() {
       error => {
         console.log(error);
       })
-  } else {
+  }
+  else {
     console.log("RefreshTokenEvent Error: Unable to retrieve valid Refresh token. Has it expired?");
   }
 }
 
-export function logOut() {
+/** remove the jwt and refresh tokens from local storage */
+export function logOut(): void {
   localStorage.removeItem('jwt');
   localStorage.removeItem('refresh');
 }
+
+/** calls the socket store action that calls the Socket middleware `connect` function */
+export function establishSocketConnection(): void {
+  dispatchSocketConnection(store.dispatch).connectToSockets();
+}
+
+/** defines the type of the dispatchSocketConnection action variable */
+interface SocketConnectProps {
+  connectToSockets: () => void;
+}
+
+/** takes the dispatch as an argument and returns an executable function that will establish the connection to the socket */
+const dispatchSocketConnection = (dispatch: Dispatch<any>): SocketConnectProps => ({
+  connectToSockets: () => dispatch(connectSocket())
+});
