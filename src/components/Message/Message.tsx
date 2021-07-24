@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useStore } from '../store/reactive'
+import { useStore } from 'store/reactive'
 import axios from "axios";
 import { format } from 'date-fns'
-import UserCardModal from "./UserCardModal";
-import '../assets/css/messages.css';
+import UserCardModal from "components/UserCard/";
+import './Message.css';
 
 function Message(props: any) {
   const { message, index } = props

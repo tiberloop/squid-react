@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios'
-import './assets/css/index.css';
+import 'assets/css/index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from 'reportWebVitals';
 import { Provider } from 'react-redux';
-import { checkAuthentication } from './services/auth'
+import { checkAuthentication } from 'services/authenticationService'
 
 import {
   BrowserRouter as Router,

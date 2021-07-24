@@ -25,7 +25,7 @@ function messageReducer(state = INITIAL_STATE, action: {username?: string, type:
         messages: [...state.messages, action.message]
       };
     case MESSAGE_SENT:
-      // console.log("message was successfully sent");
+      break;
     default:
       return state;
   }
