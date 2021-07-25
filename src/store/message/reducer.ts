@@ -1,10 +1,8 @@
-/*
-/store/message/reducer/index.ts
-
+/**
 handles the appropriate responses to the actions
 */
-import { SEND_MESSAGE_RESPONSE, MESSAGE_SENT, USER_CHANGED } from '../actions';
-import { readRecord } from '../../../services/localStorageService';
+import { SEND_MESSAGE_RESPONSE, MESSAGE_SENT, USER_CHANGED } from './actions';
+import { readRecord } from '../../services/localStorageService';
 
 const INITIAL_STATE = {
   username: readRecord('username') || 'guest0001',

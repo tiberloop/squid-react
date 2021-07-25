@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { handleSuccesssfulLogin } from 'services/authenticationService'
+import { UserInterface } from "utils/apiObjects";
+import User from "utils/User";
+import { useAppDispatch, useAppSelector } from "hooks";
 
 function Login() {
   const [username, setUsername] = useState('')
@@ -13,6 +16,8 @@ function Login() {
   const [registerPassword, setRegisterPassword] = useState('')
   const [registerEmail, setRegisterEmail] = useState('')
   const [registerName, setRegisterName] = useState('')
+
+  
 
   const login = () => {
     let param = { username, password }
@@ -36,6 +41,10 @@ function Login() {
         setLoginOrSignup(true)
       })
   }
+
+  // const updateUserInStore = (user: UserInterface) => {
+  //   var user: User = new User();
+  // }
 
   return (
     <div className="p-5 mt-16 border border-gray-8 bg-white dark:bg-primaryDark rounded mx-auto" style={{ maxWidth: '400px' }}>

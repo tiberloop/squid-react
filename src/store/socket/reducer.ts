@@ -1,9 +1,7 @@
-/*
-store/socket/reducer/index.ts
-
+/**
 handles the appropriate responses to the socket actions
 */
-import { CONNECTION_CHANGED } from '../actions';
+import { CONNECTION_CHANGED } from './actions';
 
 const INITIAL_STATE = {
   connected: false,

@@ -4,6 +4,7 @@ import Message from 'components/Message'
 import { getToken } from 'services/authenticationService'
 import LoadingSpinner from "components/helpers/LoadingSpinner";
 import CreateChannelModal from "components/CreateChannel";
+import store from 'store';
 
 function Main() {
   const [createChannelOpen, setCreateChannelOpen] = useState(false)
@@ -25,7 +26,7 @@ function Main() {
 
   useEffect(() => { // 
     axios.get('/rooms/all').then(res => {
-      setRooms(res.data.rooms || [])
+      setRooms(res.data.rooms || []);
     })
     axios.get('/users/list').then(res => {
       setUser(res.data[0])

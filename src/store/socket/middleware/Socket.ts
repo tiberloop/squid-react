@@ -1,6 +1,4 @@
 /**
-store/socket/middleware/Socket.ts
-
 Defines the Socket class that provides the necessary functionality for a web socket
 */
 

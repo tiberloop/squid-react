@@ -1,6 +1,4 @@
-/*
-store/socket/actions/index.ts
-
+/**
 File defining the necessary actions for a connecting to a socket and status of socket connection
 */
 export const CONNECTION_CHANGED = 'CONNECTION_CHANGED';
