@@ -1,11 +1,9 @@
-/*
-store/socket/middleware/index.ts
-
+/**
 Custom Socket Middleware for our Redux Store
 */
 import Socket from "./Socket";
 import { CONNECT_SOCKET, connectionChanged } from "../actions";
-import { messageReceived, messageSent, SEND_MESSAGE_REQUEST } from "../../message/actions";
+import { messageReceived, messageSent, SEND_MESSAGE_REQUEST } from "store/message/actions";
 
 const socketMiddleware = (store: any) => {
 

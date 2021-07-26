@@ -6,6 +6,8 @@ import axios from 'axios'
 import { Dispatch } from 'redux';
 import { connectSocket } from 'store/socket/actions';
 import store from 'store';
+import { updateUser } from 'store/user/actions';
+import { UserInterface } from 'utils/apiObjects';
 
 /**  grab the JWT token from local storage */
 export function getToken(): string {
@@ -21,6 +23,7 @@ export function handleSuccesssfulLogin(responseBody: any): void {
     localStorage.setItem('refresh', responseBody.Refresh);
     handleAuthentication(responseBody.Token);
     establishSocketConnection();
+    setUser(); // TODO: Decouple set user from authenticationService
   } else {
     console.log("Error: Unable to retrieve tokens.");
   }
@@ -60,6 +63,7 @@ export async function refreshTokenEvent(): Promise<void> {
         if (res.data && res.data.Token){
           localStorage.setItem('jwt', res.data.Token);
           handleAuthentication(res.data.Token);
+          setUser(); // TODO: Decouple stored user from authentication
         }
       },
       error => {
@@ -91,3 +95,23 @@ interface SocketConnectProps {
 const dispatchSocketConnection = (dispatch: Dispatch<any>): SocketConnectProps => ({
   connectToSockets: () => dispatch(connectSocket())
 });
+
+/** call the api to get information on the current user */
+export function setUser(): void {
+  axios.get('/users/me').then(res => {
+    setUserInStore(res.data);
+  })
+}
+/** calls the user store action to add user to the store */
+export function setUserInStore(user: UserInterface): void {
+  // dispatchUser(store.dispatch, user).setUser();
+  store.dispatch(updateUser(user));
+}
+/** defines the type of the dispatchSocketConnection action variable */
+// interface UserProps {
+//   setUser: () => void;
+// }
+
+// const dispatchUser = (dispatch: Dispatch<any>, user: UserInterface): UserProps => ({
+//   setUser: () => dispatch(updateUser(user))
+// });

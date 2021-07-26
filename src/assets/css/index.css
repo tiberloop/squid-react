@@ -33,6 +33,11 @@
   /* background-color: #36465d; */
 }
 
+.text-loader {
+	width: 30px;
+	height: auto;
+}
+
 /*
 body {
   margin: 0;

@@ -1,6 +1,4 @@
-/*
-/store/message/reducer/index.ts
-
+/**
 File defining the necessary actions for sending/receiving messages
 */
 export const SEND_MESSAGE_RESPONSE = 'SEND_MESSAGE_RESPONSE';

@@ -1,0 +1,64 @@
+.theme-switch {
+    display: flex;
+    border-radius: 50px;
+    height: 26px;
+    width: 50px;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.theme-switch.dark {
+    background-color: rgb(10, 10, 44);
+    box-shadow: 0 0 5px rgb(255, 255, 255);
+}
+
+.theme-switch.light {
+    background-color: rgb(106, 165, 255);
+    box-shadow: 0 0 5px rgb(0, 0, 0);
+}
+
+.toggle {
+    height: 26px;
+    width: 50px;
+    border-radius: 50px;
+    margin: auto;
+    background-image: linear-gradient(aqua, skyblue);
+}
+
+.ball {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0);
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.2s linear;
+    z-index: 1;
+    
+}
+
+.ball.dark {
+    box-shadow: 0 0 5px floralwhite;
+    transform: translateX(0px);
+}
+
+.ball.light {
+    box-shadow: 0 0 5px yellow;
+    transform: translateX(23px);
+    
+}
+
+.moon.light {
+    /* color:rgb(178, 226, 230) */
+    opacity: 0.2;
+}
+
+.sun.dark {
+    opacity: 0.2;
+}
+.theme-switch + .theme-switch .ball {
+    transform: translateX(24px);
+}
