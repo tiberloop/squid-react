@@ -59,22 +59,7 @@ export function getUser(userId: string): UserInterface | null {
   return null;
 }
 
-/** GET: Returns an upload given its ID. */
-// export function getUserAvatar(userId: string, callback: IResponse) {
-//   debugger;
-//   axios.get(
-//     `/avatar/${userId}`,
-//     {
-//       responseType: 'arraybuffer'
-//     }
-//   ).then(response => {
-//     callback(Buffer.from(response.data, 'binary').toString('base64'))
-//   },
-//     error => {
-//       console.log(error)
-//     }
-//   )
-// }
+/** GET: Returns a Base64 encoded image given a user's ID. */
 export function getUserAvatar(userId: string): Promise<string> {
   return new Promise((resolve, reject) => {
     axios.get(
@@ -86,5 +71,26 @@ export function getUserAvatar(userId: string): Promise<string> {
         resolve(Buffer.from(response.data, 'binary').toString('base64'));
       }
     ).catch(error => reject(error));
+  })
+}
+
+/** POST: update a user's username, real_name, and/or email */
+export function updateUser(userId: string,
+                           params: {username:  string,
+                                    real_name: string,
+                                    email:     string}): Promise<any> {
+  return new Promise((resolve, reject) => {
+    debugger;
+    axios.post(
+      `/users/${userId}`,
+      {user: params},
+    ).then(
+      response => {
+      resolve(response);
+    },
+    error => {
+      console.log(error);
+    }
+  ).catch(error => reject(error));
   })
 }

@@ -1,4 +1,18 @@
 .user-avatar {
     background-image: url("../../assets/icons/squid-icons/squid192x192.png");
     background-repeat: no-repeat;
-  }
+}
+
+.btn-edit {
+    display: inline-block;
+    background-color: transparent;
+    padding: 3px;
+    align-self: flex-end;
+    position: absolute;
+    top: 3%;
+    right: 5%;
+}
+
+.btn-edit:hover {
+    cursor: pointer;
+}

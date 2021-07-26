@@ -16,8 +16,7 @@ import 'assets/css/App.css';
 import Navigation from 'components/Navigation';
 import Login from 'screens/Login'
 import Main from 'screens/Main';
-// import Profile from 'screens/Profile';
-import Profile from 'screens/Profile/Profile2';
+import Profile from 'screens/Profile';
 import { useAppDispatch, useAppSelector } from "hooks";
 
 createStore({
