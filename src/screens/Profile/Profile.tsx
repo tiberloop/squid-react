@@ -53,7 +53,7 @@ function Profile(props: IProfileProps) {
   
   
   useEffect(() => {
-    debugger;
+    // debugger;
     user = loggedInUser;
   }, [loggedInUser])
 
@@ -70,33 +70,34 @@ function Profile(props: IProfileProps) {
   }
   
   const updateProfile = () => {
-    if (user) {
-      var username = getPureValue(newUsername, loggedInUser.username);
-      var email = getPureValue(newEmail, loggedInUser.email);
-      var realName = getPureValue(newRealName, loggedInUser.real_name);
-      var updatedUser = {
-        ID: user.ID,
-        avatar: user.avatar,
-        email: email,
-        previous_avatars: user.previous_avatars,
-        real_name: realName,
-        username: username
-      }
-      updateUser(user.ID, 
-        {
-          username: newUsername,
-          real_name: newRealName,
-          email: newEmail
-        })
-        .then(response => {
-          dispatch(updateUserInStore(
-            updatedUser
-          ));
-          setIsEditing(false);
-        })
-        .catch(error => console.log(error))
+    // if (user) {
+    //   var username = getPureValue(newUsername, loggedInUser.username);
+    //   var email = getPureValue(newEmail, loggedInUser.email);
+    //   var realName = getPureValue(newRealName, loggedInUser.real_name);
+    //   var updatedUser = {
+    //     ID: user.ID,
+    //     avatar: user.avatar,
+    //     email: email,
+    //     previous_avatars: user.previous_avatars,
+    //     real_name: realName,
+    //     username: username
+    //   }
+    //   updateUser(user.ID, 
+    //     {
+    //       username: newUsername,
+    //       real_name: newRealName,
+    //       email: newEmail
+    //     })
+    //     .then(response => {
+    //       dispatch(updateUserInStore(
+    //         updatedUser
+    //       ));
+    //       setIsEditing(false);
+    //     })
+    //     .catch(error => console.log(error))
 
-    }
+    // }
+    setIsEditing(false);
   }
 
   /** returns the original value for that parameter if the newValue is still empty */

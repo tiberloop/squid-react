@@ -80,7 +80,7 @@ export function updateUser(userId: string,
                                     real_name: string,
                                     email:     string}): Promise<any> {
   return new Promise((resolve, reject) => {
-    debugger;
+    // debugger;
     axios.post(
       `/users/${userId}`,
       {user: params},
