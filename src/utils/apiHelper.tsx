@@ -86,11 +86,27 @@ export function updateUser(userId: string,
       {user: params},
     ).then(
       response => {
-      resolve(response);
+        resolve(response);
     },
     error => {
-      console.log(error);
-    }
-  ).catch(error => reject(error));
+        reject(error);
+      }
+    ).catch(error => reject(error));
+  })
+}
+
+/** GET: Returns a List of Users. */
+export function getUsersList(): Promise<any[]> {
+  return new Promise((resolve, reject) => {
+    axios.get(
+      '/users/list'
+    ).then(
+      response => {
+        resolve(response.data);
+    },
+    error => {
+        reject(error);
+      }
+    ).catch(error => reject(error));
   })
 }
