@@ -4,6 +4,7 @@ import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
 import { useAppSelector } from "hooks";
 import { connect } from 'react-redux';
+import SearchBar from 'components/SearchBar';
 import './Navigation.css';
 
 function Navigation() {
@@ -34,7 +35,7 @@ function Navigation() {
           </Link>
         </div>
         <code className="p-2 select-none">SquidChat <span className="text-gray-300">{version}</span></code>
-				
+				<SearchBar theme={theme}/>
         <div className="flex row">
           <div className="flex p-2">
               <label id="theme-switch" className={`theme-switch ${theme}`}>
