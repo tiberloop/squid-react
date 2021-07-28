@@ -43,20 +43,21 @@ export async function getRoomMessages(roomId: string): Promise<any> {
 }
 
 /** GET: Returns a user given their ID.  */
-export function getUser(userId: string): UserInterface | null {
-  axios.get(
-    `/users/${userId}`
-  ).then(
-    response => {
-      if (response && response.data) {
-        return response.data;
+export function getUser(userId: string): Promise<UserInterface> {
+  return new Promise((resolve, reject) => {
+    axios.get(
+      `/users/${userId}`
+    ).then(
+      response => {
+        if (response && response.data) {
+          resolve(response.data);
+        }
+      },
+      error => {
+        reject(error);
       }
-    },
-    error => {
-      return null;
-    }
-  )
-  return null;
+    )
+  })
 }
 
 /** GET: Returns a Base64 encoded image given a user's ID. */

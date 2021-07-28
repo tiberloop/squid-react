@@ -18,6 +18,7 @@ import Login from 'screens/Login'
 import Main from 'screens/Main';
 import Profile from 'screens/Profile';
 import { useAppDispatch, useAppSelector } from "hooks";
+import SearchResults from 'screens/SearchResults';
 
 createStore({
   users: [],
@@ -106,11 +107,12 @@ function App() {
           {isLoggedIn ? <Redirect to="/" /> : <Login />}
         </Route>
 
-        {/* Note how these two routes are ordered. The more specific
-            path="/contact/:id" comes before path="/contact" so that
-            route will render when viewing an individual contact */}
-        <PrivateRoute path="/:username" component={Profile}>
+        <PrivateRoute path="/profile/:username" component={Profile}>
           {/* <Profile userId=""/> */}
+        </PrivateRoute>
+
+        <PrivateRoute path="/searchresults?:query" component={SearchResults}>
+
         </PrivateRoute>
 
         {/* If none of the previous routes render anything,

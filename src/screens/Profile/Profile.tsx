@@ -35,9 +35,9 @@ function Profile(props: IProfileProps) {
   const providedUsername: any = props.match.params.username;
   const providedUserId: any = useLocation<IProfileStateType>().state.userId;
   const isCurrentUser: boolean = providedUserId === loggedInUser.ID;
-  var user: UserInterface | null = isCurrentUser ? loggedInUser : getUser(providedUserId);
   const dispatch = useAppDispatch();
   const [avatarImg, setAvatar] = useState<string>();
+  const [user, setUser] = useState<UserInterface>();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [button, setButton] = useState<ReactElement>();
   const [newUsername, setUsername] = useState("");
@@ -49,12 +49,23 @@ function Profile(props: IProfileProps) {
       setAvatar(response);
     })
     .catch(error => console.log(error.response));
+
+    if (isCurrentUser) {
+      setUser(loggedInUser);
+    }
+    else {
+      getUser(providedUserId).then(response => {
+        setUser(response);
+      })
+      .catch(error => console.log(error.response))
+    }
+    
   }, [providedUserId])
   
   
   useEffect(() => {
     // debugger;
-    user = loggedInUser;
+    setUser(loggedInUser);
   }, [loggedInUser])
 
   const logout = () => {
