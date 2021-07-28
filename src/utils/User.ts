@@ -3,14 +3,14 @@ Defines the User class
 */
 
 import { apiUrl } from 'constants/apiUrl';
-import { UserInterface } from 'utils/apiObjects';
+import { ISquidUser } from 'utils/apiObjects';
 import axios from 'axios'
 import { logOut as logoutAuth, handleSuccesssfulLogin } from 'services/authenticationService';
 
 export default class User {
-  public user: UserInterface;
+  public user: ISquidUser;
 
-  constructor(user: UserInterface) {
+  constructor(user: ISquidUser) {
     this.user = user;
   }
 

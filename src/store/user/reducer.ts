@@ -2,7 +2,7 @@
 handles the appropriate responses to the actions for a user
 */
 import { USER_LOGGED_IN, USER_LOGGED_OUT } from './actions';
-import { UserInterface } from 'utils/apiObjects';
+import { ISquidUser } from 'utils/apiObjects';
 
 const INITIAL_STATE = {
   user: {
@@ -16,7 +16,7 @@ const INITIAL_STATE = {
   isLoggedIn: false
 };
 
-function userReducer(state = INITIAL_STATE, action: {user?: UserInterface, type: string}) {
+function userReducer(state = INITIAL_STATE, action: {user?: ISquidUser, type: string}) {
   switch (action.type) {
     case USER_LOGGED_IN:
       // make update to user store and update the DB

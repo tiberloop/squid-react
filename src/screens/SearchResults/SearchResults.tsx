@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Fuse from "fuse.js";
 import { RouteComponentProps, useHistory, useLocation, Link } from 'react-router-dom';
-import { UserInterface } from "utils/apiObjects";
+import { ISquidUser } from "utils/apiObjects";
 /** interface for the items in the url */
 interface ISearchResultsMatchProps {
   query: string,
 }
 
 interface IFuseSearchResults {
-  item: UserInterface
+  item: ISquidUser
 }
 /** Props coming into the component */
 interface ISearchResultsProps extends RouteComponentProps<ISearchResultsMatchProps> {
@@ -35,13 +35,13 @@ function SearchResults(props: ISearchResultsProps) {
 
   useEffect(() => {
     var results: any[] = []
-    var result: Fuse.FuseResult<UserInterface>[] = fuse.search(query);
+    var result: Fuse.FuseResult<ISquidUser>[] = fuse.search(query);
     console.log(result);
     if (!result.length) {
       setSearchResults([]);
     } 
     else {
-      result.forEach((item: Fuse.FuseResult<UserInterface>) => {
+      result.forEach((item: Fuse.FuseResult<ISquidUser>) => {
         results.push(item);
       });
       console.log(results);
@@ -49,7 +49,7 @@ function SearchResults(props: ISearchResultsProps) {
     }
   }, [])
 
-  const selectUser = (user: UserInterface) => {
+  const selectUser = (user: ISquidUser) => {
     // navigate to profile page
     console.log(user);
 
@@ -57,7 +57,7 @@ function SearchResults(props: ISearchResultsProps) {
 
   return (
     <div className="inline-block lg:max-w-xl m-2 sm:mx-auto align-bottom bg-white dark:bg-primaryDark rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-      {searchResults.length > 0 && searchResults.map((result: Fuse.FuseResult<UserInterface>) => (
+      {searchResults.length > 0 && searchResults.map((result: Fuse.FuseResult<ISquidUser>) => (
         
         <Link to={{pathname:`/profile/${result.item.username}`, state: {userId: result.item.ID}}} onClick={() => selectUser(result.item)} className="p-2 bg-green w-full text-left block hover:underline">
           {/* <button className="p-2 bg-green w-full text-left block hover:underline" onClick={() => selectUser(result.item)}> */}

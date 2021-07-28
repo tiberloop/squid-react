@@ -7,7 +7,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { logoutUser, updateUser as updateUserInStore } from 'store/user/actions';
 import { useAppDispatch, useAppSelector } from "hooks";
-import { UserInterface } from "utils/apiObjects";
+import { ISquidUser } from "utils/apiObjects";
 import { getUser, getUserAvatar, updateUser } from 'utils/apiHelper';
 import './Profile.css';
 /** props for dispatching */
@@ -31,13 +31,13 @@ function Profile(props: IProfileProps) {
 
   const history = useHistory()
   // const [user, setUser] = useState<any>(null)
-  const loggedInUser: UserInterface = useAppSelector((state) => state.userState.user);
+  const loggedInUser: ISquidUser = useAppSelector((state) => state.userState.user);
   const providedUsername: any = props.match.params.username;
   const providedUserId: any = useLocation<IProfileStateType>().state.userId;
   const isCurrentUser: boolean = providedUserId === loggedInUser.ID;
   const dispatch = useAppDispatch();
   const [avatarImg, setAvatar] = useState<string>();
-  const [user, setUser] = useState<UserInterface>();
+  const [user, setUser] = useState<ISquidUser>();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [button, setButton] = useState<ReactElement>();
   const [newUsername, setUsername] = useState("");
