@@ -7,7 +7,7 @@ import { Dispatch } from 'redux';
 import { connectSocket } from 'store/socket/actions';
 import store from 'store';
 import { updateUser } from 'store/user/actions';
-import { UserInterface } from 'utils/apiObjects';
+import { ISquidUser } from 'utils/apiObjects';
 
 /**  grab the JWT token from local storage */
 export function getToken(): string {
@@ -103,7 +103,7 @@ export function setUser(): void {
   })
 }
 /** calls the user store action to add user to the store */
-export function setUserInStore(user: UserInterface): void {
+export function setUserInStore(user: ISquidUser): void {
   // dispatchUser(store.dispatch, user).setUser();
   store.dispatch(updateUser(user));
 }

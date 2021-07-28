@@ -1,7 +1,7 @@
 /**
 File defining the necessary actions for a user
 */
-import { UserInterface } from "utils/apiObjects";
+import { ISquidUser } from "utils/apiObjects";
 import { logOut } from "services/authenticationService";
 export const USER_LOGGED_IN = 'USER_LOGGED_IN';
 export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
@@ -16,7 +16,7 @@ export const logoutUser = () => {
 };
 
 /** call this action when user logs in or changes their username, email, avatar, or real name */
-export const updateUser = (user: UserInterface) => {
+export const updateUser = (user: ISquidUser) => {
   return {
     type: USER_LOGGED_IN,
     user

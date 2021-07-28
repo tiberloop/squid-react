@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { UserInterface } from './apiObjects';
+import { ISquidUser, ISquidRoom } from './apiObjects';
 
 export interface IResponse {
   (data: any): void
@@ -24,6 +24,42 @@ export async function login(username: string, password: string): Promise<any> {
   )
 }
 
+/** GET: todo */
+export function getAllRooms(): Promise<ISquidRoom[]> {
+  return new Promise((resolve, reject) => {
+  axios.get(
+    '/rooms/all'
+    ).then(
+      response => {
+        if (response && response.data) {
+          resolve(response.data);
+        }
+      },
+      error => {
+        reject(error);
+      }
+    )
+  })
+}
+
+/** GET: todo */
+export function getAllUsers(): Promise<ISquidUser[]> {
+  return new Promise((resolve, reject) => {
+    axios.get(
+      '/users/list'
+    ).then(
+      response => {
+        if (response && response.data) {
+          resolve(response.data);
+        }
+      },
+      error => {
+        reject(error);
+      }
+    )
+  })
+}
+
 /** GET:  Returns paginated lists of messages sent for the given room.
  * Use a URL query to ask for the specific bucket_number; this defaults to 0.*/
 export async function getRoomMessages(roomId: string): Promise<any> {
@@ -43,7 +79,7 @@ export async function getRoomMessages(roomId: string): Promise<any> {
 }
 
 /** GET: Returns a user given their ID.  */
-export function getUser(userId: string): Promise<UserInterface> {
+export function getUser(userId: string): Promise<ISquidUser> {
   return new Promise((resolve, reject) => {
     axios.get(
       `/users/${userId}`

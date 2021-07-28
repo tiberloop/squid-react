@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { handleSuccesssfulLogin } from 'services/authenticationService'
-import { UserInterface } from "utils/apiObjects";
+import { ISquidUser } from "utils/apiObjects";
 import User from "utils/User";
 import { useAppDispatch, useAppSelector } from "hooks";
 

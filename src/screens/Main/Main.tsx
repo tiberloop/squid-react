@@ -5,6 +5,8 @@ import { getToken } from 'services/authenticationService'
 import LoadingSpinner from "components/helpers/LoadingSpinner";
 import CreateChannelModal from "components/CreateChannel";
 import store from 'store';
+import { ISquidRoom } from "utils/apiObjects";
+import { getAllRooms } from "utils/apiHelper";
 
 function Main() {
   const [createChannelOpen, setCreateChannelOpen] = useState(false)
@@ -25,8 +27,9 @@ function Main() {
   const chatRoomRef: any = useRef<HTMLInputElement>();
 
   useEffect(() => { // 
-    axios.get('/rooms/all').then(res => {
-      setRooms(res.data.rooms || []);
+    getAllRooms().then((rooms: ISquidRoom[]) => {
+      debugger;
+      setRooms(rooms || []);
     })
     axios.get('/users/list').then(res => {
       setUser(res.data[0])
@@ -248,7 +251,7 @@ function Main() {
                 </svg>
               </button>
             )}
-            <span className="p-2">{rooms.find((r: any) => r.room_id === currentRoom?.room_id)?.name || 'No room selected'}</span>
+            <span className="p-2">{rooms.find((r: ISquidRoom) => r.room_id === currentRoom?.room_id)?.name || 'No room selected'}</span>
           </div>
           <button className="p-2 hover:bg-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
