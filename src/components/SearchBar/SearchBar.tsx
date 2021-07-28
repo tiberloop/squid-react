@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, ChangeEvent } from 'react'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import  { getUsersList } from 'utils/apiHelper';
 import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-
+import { Link } from 'react-router-dom';
 interface ISearchBarParams {
   theme: string
 }
@@ -13,6 +13,7 @@ interface ISearchBarParams {
 function SearchBar(props: ISearchBarParams) {
 
   const [myOptions, setMyOptions] = useState<string[]>([]);
+  const [possibleResults, setPossibleResults] = useState<object[]>([]);
   // so so ugly
   const themeStyles = props.theme === "dark" ?  {
                                                   optionFontColor: "#fff",
@@ -137,24 +138,30 @@ function SearchBar(props: ISearchBarParams) {
   }));
   const labelClasses = useLabelStyles();
 
+  
+  const [queryString, setQueryString] = useState<string>('');
   /** Function that calls the API at every keystroke and rerenders the component with the updated `myOptions` */
-  const getDataFromAPI = () => {
+  const getDataFromAPI = (query: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     console.log("Users Fetched from API")
-
+    setQueryString(query.target.value);
     // TODO: performance enhancements. currently not smooth/immediately responsive
     getUsersList().then((response) => {
         console.log(response)
-        var results: string[] = [];
+        var possibleQueryCompletions: string[] = [];
+        var completeResponseData: object[] = [];
         for (var i = 0; i < response.length; i++) {
           setMyOptions([]);
-          results.push(response[i].username);
-          results.push(response[i].real_name);
+          possibleQueryCompletions.push(response[i].username);
+          possibleQueryCompletions.push(response[i].real_name);
+          completeResponseData.push(response[i]);
         }
         
-        setMyOptions(results)
-        console.log(myOptions)
+        setMyOptions(possibleQueryCompletions);
+        setPossibleResults(completeResponseData);
+        console.log(myOptions);
     })
   }
+
 
   return (
     <div className="w-2/6 inline-block" >
@@ -181,9 +188,13 @@ function SearchBar(props: ISearchBarParams) {
               margin="dense"
               
             />
+            
+            
+            <Link to={{pathname:`/searchresults?${queryString}`, state: {data: possibleResults}}} className="flex p-2 hover:bg-gray-200">
             <span className="pl-2 pt-0.5">
               <FontAwesomeIcon icon={faSearch}/>
             </span>
+            </Link>
             </div>
         
         )}
