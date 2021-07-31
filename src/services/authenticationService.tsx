@@ -22,7 +22,6 @@ export function handleSuccesssfulLogin(responseBody: any): void {
     localStorage.setItem('jwt', responseBody.Token);
     localStorage.setItem('refresh', responseBody.Refresh);
     handleAuthentication(responseBody.Token);
-    establishSocketConnection();
     setUser(); // TODO: Decouple set user from authenticationService
   } else {
     console.log("Error: Unable to retrieve tokens.");
@@ -100,6 +99,7 @@ const dispatchSocketConnection = (dispatch: Dispatch<any>): SocketConnectProps =
 export function setUser(): void {
   axios.get('/users/me').then(res => {
     setUserInStore(res.data);
+    establishSocketConnection();
   })
 }
 /** calls the user store action to add user to the store */

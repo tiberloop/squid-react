@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ISquidUser, ISquidRoom } from './apiObjects';
+import { ISquidUser, ISquidRoom, ISquidMessage } from './apiObjects';
 
 export interface IResponse {
   (data: any): void
@@ -42,11 +42,11 @@ export function getAllRooms(): Promise<ISquidRoom[]> {
   })
 }
 
-/** GET: todo */
-export function getAllUsers(): Promise<ISquidUser[]> {
+/** GET: get dm */
+export function getDM(userId: string): Promise<ISquidRoom> {
   return new Promise((resolve, reject) => {
     axios.get(
-      '/users/list'
+      `/rooms/dm/${userId}`
     ).then(
       response => {
         if (response && response.data) {
@@ -62,20 +62,22 @@ export function getAllUsers(): Promise<ISquidUser[]> {
 
 /** GET:  Returns paginated lists of messages sent for the given room.
  * Use a URL query to ask for the specific bucket_number; this defaults to 0.*/
-export async function getRoomMessages(roomId: string): Promise<any> {
-  axios.get(
-    `/rooms/${roomId}/messages`
-  ).then(
-    response => {
-      if (response && response.data) {
-        return response.data;
+export async function getRoomMessages(roomId: string, bucketNumber: number = 1): Promise<ISquidMessage[]> {
+  // debugger;
+  return new Promise((resolve, reject) => {
+    axios.get(
+      `/rooms/${roomId}/messages?bucket_number=${bucketNumber}`
+    ).then(
+      response => {
+        if (response && response.data) {
+          resolve(response.data);
+        }
+      },
+      error => {
+        reject(error);
       }
-      return {};
-    },
-    error => {
-      return error;
-    }
-  )
+    )
+  })
 }
 
 /** GET: Returns a user given their ID.  */
@@ -133,7 +135,7 @@ export function updateUser(userId: string,
 }
 
 /** GET: Returns a List of Users. */
-export function getUsersList(): Promise<any[]> {
+export function getUsersList(): Promise<ISquidUser[]> {
   return new Promise((resolve, reject) => {
     axios.get(
       '/users/list'
@@ -141,9 +143,43 @@ export function getUsersList(): Promise<any[]> {
       response => {
         resolve(response.data);
     },
-    error => {
+      error => {
         reject(error);
       }
+    ).catch(error => reject(error));
+  })
+}
+
+/** POST: create a new room. Return the new room ID*/
+export function createRoom(roomName: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    axios.post(
+      '/rooms/create',
+      {name: roomName }
+    ).then(
+        response => {
+          resolve(response.data.Success);
+        },
+        error => {
+          reject(error);
+        }
+    ).catch(error => reject(error));
+  })
+}
+
+/** POST: add user(s) to a room */
+export function addUsersToRoom(roomId: string, users: string[]): Promise<any> {
+  return new Promise((resolve, reject) => {
+    axios.post(
+      `/rooms/${roomId}/members`,
+      {add_members: users }
+    ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
     ).catch(error => reject(error));
   })
 }

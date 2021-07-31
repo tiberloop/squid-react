@@ -26,7 +26,7 @@ function Message(props: any) {
   }, [avatars])
 
 
-  const timeSentFormatted = format(new Date(message.time_sent), 'p')
+  const timeSentFormatted = message.time_sent != null ? format(new Date(message.time_sent), 'p') : null;
 
   return (
   <div className={`flex p-1 ${(index % 2) && 'bg-gray-100 dark:bg-primaryDarkContrast'}`}>

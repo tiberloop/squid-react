@@ -5,65 +5,66 @@ import { getToken } from 'services/authenticationService'
 import LoadingSpinner from "components/helpers/LoadingSpinner";
 import CreateChannelModal from "components/CreateChannel";
 import store from 'store';
-import { ISquidRoom } from "utils/apiObjects";
-import { getAllRooms } from "utils/apiHelper";
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import { useAppSelector } from "hooks";
+import { IMessageToDeliver, ISquidMessage, ISquidRoom, ISquidUser } from "utils/apiObjects";
+import { getAllRooms, getRoomMessages, addUsersToRoom, getDM, getUsersList } from "utils/apiHelper";
+import { reactToMessage, setAsTyping, setAsNotTyping } from 'store/socket/actions';
+import { sendMessage, setRoom } from "store/rooms/actions";
 
-function Main() {
+function Main(props: IMainDispatchProps) {
   const [createChannelOpen, setCreateChannelOpen] = useState(false)
-
+  const loggedInUser: ISquidUser = useAppSelector((state) => state.userState.user);
   const [roomIds, setRoomIds] = useState<any>([])
   const [rooms, setRooms] = useState<any>([])
   const [allUsers, setAllUsers] = useState<any>([])
   const [messagesDict, setMessagesDict] = useState<any>({})
-
   const [user, setUser] = useState<any>(null)
-
-  const [currentRoom, setCurrentRoom] = useState<any>(null)
-  const [currentRoomMessages, setCurrentRoomMessages] = useState<any>([])
+  const [currentRoom, setCurrentRoom] = useState<ISquidRoom | null>(null)
+  const [currentRoomMessages, setCurrentRoomMessages] = useState<ISquidMessage[]>([])
   const [loading, setLoading] = useState<any>(false)
-
   const [message, setMessage] = useState<string>('')
 
-  const chatRoomRef: any = useRef<HTMLInputElement>();
+  const roomsInState: ISquidRoom[] = useAppSelector((state) => state.roomState.rooms); // will update when the state changes
 
-  useEffect(() => { // 
+  const chatRoomRef: any = useRef<HTMLInputElement>();
+  useEffect(() => {
+    if (currentRoom) {
+      // seems that currentroom is udpating without this logic. we can probably just shallow copy:
+      // setCurrentRoomMessages([]...currentRoom.messages]);
+      console.log(roomsInState);
+      var tempRoom = roomsInState.find((room) => room.room_id === currentRoom.room_id );
+      // debugger;
+      if (tempRoom) {
+        setCurrentRoomMessages([...tempRoom.messages]);
+      }
+    }
+  }, [roomsInState]);
+
+  useEffect(() => { 
+    // debugger;
     getAllRooms().then((rooms: ISquidRoom[]) => {
-      debugger;
       setRooms(rooms || []);
+      rooms.forEach(room => props.setRoom(room));
     })
-    axios.get('/users/list').then(res => {
-      setUser(res.data[0])
-      setAllUsers(res.data)
+    getUsersList().then((response: ISquidUser[]) => {
+      // setUser(res.data[0])
+      setAllUsers(response);
     })
+    setUser(loggedInUser);
   }, [])
 
 
   // function to retrieve dms. currently has issues running locally
   const selectDM = (userId: any) => {
-    setLoading(true)
-    // to work in dev:
-    // var myRequest: string = `https://squid.chat/api/rooms/dm/${userId}`;
-    // var token: any = localStorage.getItem("jwt");
-    // var myHeaders = new Headers();
-    // myHeaders.append('tasty_token', token);
-    // var myInit = {
-    //   method: 'GET', headers: myHeaders, mode: 'cors' as RequestMode
-    // }
-    // var myRequest: any = new Request(`https://squid.chat/api/rooms/dm/${userId}`, myInit);
-    // console.log('Requested');
-    // fetch(myRequest).then(function(response) {
-    //   debugger;
-    //   console.log(response.url); // returns https://developer.mozilla.org/en-US/docs/Web/API/Response/flowers.jpg
-    //   // response.blob().then(function(myBlob) {
-    //   //   var objectURL = URL.createObjectURL(myBlob);
-    //   //   myImage.src = objectURL;
-    //   // });
-    // })
-    // })
-    axios.get(`/rooms/dm/${userId}`).then(res => {
-      setLoading(false)
-      console.log(res.data.room_id)
-      setCurrentRoom(res.data.room_id)
+    setLoading(true);
+    getDM(userId).then((room: ISquidRoom) => {
+      // debugger;
+      props.setRoom(room);
+      setLoading(false);
+      console.log(room.room_id);
+      setCurrentRoom(room);
     })
   }
 
@@ -81,28 +82,29 @@ function Main() {
 
 
   const dms = allUsers && allUsers.slice(1, allUsers.length)
-  console.log('dms', dms)
+
   const channels = rooms && rooms.filter((r: any) => !r.is_dm)
 
-  const updateMessages = (message: any) => {
-    setCurrentRoomMessages({ currentRoomMessages: [...currentRoomMessages, message] });
+  const updateMessages = (message: ISquidMessage) => {
+    setCurrentRoomMessages([...currentRoomMessages, message]);
   }
 
   useEffect(() => {
     if (currentRoom) {
-      setLoading(true)
-      axios.get(`/rooms/${currentRoom.room_id}/messages`).then(res => {
-        if (res && res.data) {
+      setLoading(true);
+      // debugger;
+      getRoomMessages(currentRoom.room_id).then(
+        (messages: ISquidMessage[]) => {
           // var messages: string[] = parseMessages(res.data.reverse());
-          setCurrentRoomMessages(res.data);
+          setCurrentRoomMessages(messages);
           // console.log('res.data.messages', messages);
           scrollToBottom()
           setLoading(false)
-        }
-        else{
-          console.log('There are no messages for this room yet.')
-        }
-      })
+        },
+        error => {
+          console.log("This room has no messages.");
+          setLoading(false);
+        })
 
     }
   }, [currentRoom])
@@ -128,12 +130,16 @@ function Main() {
   //   })
   // }, [])
 
-  // const [imTyping, setImTyping] = useState(false)
+  const [imTyping, setImTyping] = useState(false)
 
-  const type = (message: string) => {
+  const type = (message: string, roomId: string) => {
     setMessage(message)
     // console.log('message', message)
-    // if (!imTyping) { setTimeout(() => { socket.emit('im_not_typing'); console.log('im_not_typing') }, 5000) }
+    if (!imTyping) {
+      setTimeout(() => {
+        props.setAsNotTyping(roomId);
+        console.log('im_not_typing')
+      }, 5000) }
 
     // setImTyping(true)
     // socket.emit('im_typing')
@@ -141,14 +147,14 @@ function Main() {
   }
 
   const sendMessage = () => {
-    if (message.length) {
-      // socket.emit('send_message', {
-      //   username: user.username,
-      //   room: currentRoom.room_id,
-      //   text: message,
-      //   image_id: null
-      // })
+    if (message.length && currentRoom) {
+      props.sendMessage({
+                          username: user.username,
+                          room: currentRoom.room_id,
+                          text: message,
+                        });
     }
+    console.log("messageSent");
     scrollToBottom()
     setMessage('')
   }
@@ -274,16 +280,24 @@ function Main() {
           ))}
         </div>
         <div className="flex-grow flex flex-col">
-          <div className="p-2 pb-0">
-            <textarea
+          { currentRoom ?
+            <div className="p-2 pb-0">
+              
+              <textarea
+              
               value={message}
               onKeyDown={onEnterPress}
-              onChange={(e) => { type(e.target.value) }}
+              onChange={(e) => { type(e.target.value, currentRoom?.room_id) }}
               className="border p-1 border-gray-600 bg-gray-100 dark:bg-primaryDarkContrast flex-grow w-full"
-              placeholder={currentRoom ? `Send message to #${currentRoom.name}` : ''}
+              placeholder={currentRoom ? (!currentRoom.is_dm ? `Send message to #${currentRoom.name}` : `Send message to ${currentRoom.display_name}`) : ''}
             ></textarea>
             <button className="w-full flex-grow border border-gray-600 hover:bg-gray-200 bg-gray-100 dark:bg-primaryDarkContrast" type="button" onClick={() => { sendMessage(); scrollToBottom() }}>Send Message</button>
-          </div>
+            
+              
+            </div>
+            :
+            <div/>
+          }
           <span className="px-2 pb-2">{someonesTyping && ('someone is typing...')}</span>
         </div>
       </div>
@@ -291,5 +305,35 @@ function Main() {
   )
 }
 
+interface IMainStateProps {
+  roomState: {
+    rooms: []
+  }
+}
+interface IMainDispatchProps {
+  sendMessage: (message:  IMessageToDeliver) => void;
+  reactToMessage: (reactionObject:  {
+                                      reaction: string;
+                                      message_id: string;
+                                    }) => void;
+  setAsTyping: (roomId: string) => void;
+  setAsNotTyping: (roomId: string) => void;
+  setRoom: (room: ISquidRoom) => void;
+}
 
-export default Main;
+const mapDispatchToProps = (dispatch: Dispatch<any>): IMainDispatchProps => ({
+  sendMessage: (message:  IMessageToDeliver) => dispatch(sendMessage(message)),
+  reactToMessage: (reactionObject:  {
+                                      reaction: string;
+                                      message_id: string;
+                                    }) => dispatch(reactToMessage(reactionObject)),
+  setAsTyping: (roomId: string) => dispatch(setAsTyping(roomId)),
+  setAsNotTyping: (roomId: string) => dispatch(setAsNotTyping(roomId)),
+  setRoom: (room: ISquidRoom) => dispatch(setRoom(room))
+});
+
+const mapStateToProps = (state: IMainStateProps) => ({
+  rooms: state.roomState.rooms
+});
+// @ts-ignore // ignoring because it is not matching types in mapDispatchToProps
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
