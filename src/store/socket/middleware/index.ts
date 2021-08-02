@@ -8,6 +8,7 @@ import { CONNECT_SOCKET,
          SET_AS_TYPING_REQUEST,
          SET_AS_NOT_TYPING_REQUEST } from "../actions";
 import { messageReceived, SEND_MESSAGE_REQUEST, sendMessage } from "store/rooms/actions";
+import { userBecameActive, userBecameInactive } from "store/user/actions";
 import { useAppSelector } from "hooks";
 import { IMessageToReceive } from "utils/apiObjects";
 // import { messageSent, SEND_MESSAGE_REQUEST } from "store/message/actions";
@@ -19,8 +20,10 @@ const socketMiddleware = (store: any) => {
   };
 
   const onIncomingMessage = (message: IMessageToReceive) => store.dispatch(messageReceived(message));
+  const onUserActive = (externalUserId: string) => store.dispatch(userBecameActive(externalUserId));
+  const onUserInactive = (externalUserId: string) => store.dispatch(userBecameInactive(externalUserId));
 
-  const socket = new Socket(onConnectionChange, onIncomingMessage);
+  const socket = new Socket(onConnectionChange, onIncomingMessage, onUserActive, onUserInactive);
 
   return (next: any) => (action: any) => {
     const userState = store.getState().userState;
@@ -31,7 +34,6 @@ const socketMiddleware = (store: any) => {
         break;
 
       case SEND_MESSAGE_REQUEST:
-        // debugger;
         // sendMessage(action.message);
         socket.sendMessage(action.message);
         break;

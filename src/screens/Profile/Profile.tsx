@@ -31,10 +31,11 @@ function Profile(props: IProfileProps) {
 
   const history = useHistory()
   // const [user, setUser] = useState<any>(null)
+  const isLoggedIn: boolean = useAppSelector((state) => state.userState.isLoggedIn);
   const loggedInUser: ISquidUser = useAppSelector((state) => state.userState.user);
   const providedUsername: any = props.match.params.username;
-  const providedUserId: any = useLocation<IProfileStateType>().state.userId;
-  const isCurrentUser: boolean = providedUserId === loggedInUser.ID;
+  const providedUserId: any = useLocation<IProfileStateType>().state?.userId;
+  const [isCurrentUser, setIsCurrentUser] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const [avatarImg, setAvatar] = useState<string>();
   const [user, setUser] = useState<ISquidUser>();
@@ -45,6 +46,15 @@ function Profile(props: IProfileProps) {
   const [newEmail, setEmail] = useState("");
 
   useEffect(() => {
+    // debugger;
+    if (!isLoggedIn) {
+      history.push('/login');
+    }
+  }, [])
+
+  useEffect(() => {
+    // debugger;
+    setIsCurrentUser(providedUserId === loggedInUser.ID);
     getUserAvatar(providedUserId).then(response => {
       setAvatar(response);
     })
@@ -64,7 +74,6 @@ function Profile(props: IProfileProps) {
   
   
   useEffect(() => {
-    // debugger;
     setUser(loggedInUser);
   }, [loggedInUser])
 
@@ -148,10 +157,13 @@ function Profile(props: IProfileProps) {
         )
       }
     }
-  }, [isEditing])
+    else {
+      setButton(<span/>);
+    }
+  }, [isEditing, isCurrentUser])
   
   return (
-    <div onSubmit={(e) => e.preventDefault()} className="inline-block lg:max-w-xl m-2 sm:mx-auto align-bottom bg-white dark:bg-primaryDark rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+    <div onSubmit={(e) => e.preventDefault()} className="inline-block bg-black lg:max-w-xl m-2 sm:mx-auto align-bottom bg-white dark:bg-primaryDark rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
       <div className="bg-gray-50 dark:bg-primaryDark px-4 py-3 sm:px-6 sm:flex sm:flex-column justify-space-between">
       { isCurrentUser ?
         <span className="btn-edit" >

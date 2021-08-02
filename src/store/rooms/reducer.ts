@@ -23,9 +23,9 @@ function roomReducer(state = INITIAL_STATE, action: {
 
     case MESSAGE_RECEIVED:
       // how to handle a new message from a not-current user
-      // debugger;
       var roomId: string = action.message?.room;
-      if (roomId in state.rooms.filter(room => room.room_id)) {
+      console.log(state.rooms.some(room => room.room_id === roomId));
+      if (state.rooms.some(room => room.room_id === roomId)) {
         return {
           ...state, // copy current state
           rooms: state.rooms.map( // find the item in the array that matches the provided roomId

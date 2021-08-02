@@ -11,6 +11,7 @@ export const SET_ROOM = 'SET_ROOM'
 
 
 export const sendMessage = (message: IMessageToDeliver) => {
+  // debugger;
   return {
     type: SEND_MESSAGE_REQUEST,
     message

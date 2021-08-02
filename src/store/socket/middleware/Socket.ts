@@ -18,11 +18,19 @@ export default class Socket {
   public user: string;
   private onChange: (isConnected: boolean) => void;
   private onMessage: (message: IMessageToReceive) => void;
+  private onUserActive: (user_id: string) => void;
+  private onUserInactive: (user_id: string) => void;
   private socket: any;
 
-  constructor(onChange: (isConnected: boolean) => void, onMessage: (message: IMessageToReceive) => void) {
+  constructor(onChange: (isConnected: boolean) => void,
+              onMessage: (message: IMessageToReceive) => void,
+              onUserActive: (user_id: string) => void,
+              onUserInactive: (user_id: string) => void,
+              ) {
     this.onChange = onChange;
     this.onMessage = onMessage;
+    this.onUserActive = onUserActive;
+    this.onUserInactive = onUserInactive;
     this.socket = {};
     this.user = '';
   }
@@ -46,8 +54,8 @@ export default class Socket {
     this.socket.on('someones_typing', this.someoneIsTyping);
     this.socket.on('receive_react', this.receiveReact);
     this.socket.on('avatar_changed', this.avatarChanged);
-    this.socket.on('user_online', this.userCameOnline);
-    this.socket.on('user_offline', this.userWentOffline);
+    this.socket.on('user_online', this.onUserActive);
+    this.socket.on('user_offline', this.onUserInactive);
     this.onChange(true);
   };
 
@@ -100,16 +108,6 @@ export default class Socket {
   public avatarChanged = (change: {user_id: string, image_id: string}) => {
     // do something
     console.log(change.user_id, "change their avatar");
-  }
-
-  public userCameOnline = (user_id: string) => {
-    // do something
-    console.log(user_id, "came online");
-  }
-
-  public userWentOffline = (user_id: string) => {
-    // do something
-    console.log(user_id, "went offline");
   }
 
   public disconnect = () => {
