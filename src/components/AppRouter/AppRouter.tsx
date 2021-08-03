@@ -17,16 +17,13 @@ import Navigation from 'components/Navigation';
 import Login from 'screens/Login'
 import Main from 'screens/Main';
 import Profile from 'screens/Profile';
-import AppRouter from 'components/AppRouter';
 import { useAppDispatch, useAppSelector } from "hooks";
 import SearchResults from 'screens/SearchResults';
+import RoomsList from 'components/RoomsList';
+import UsersList from 'components/UsersList';
+import Room from 'components/Room';
 
-createStore({
-  users: [],
-  avatars: []
-})
-
-function App() {
+function AppRouter() {
   // const params = useParams();
 
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -98,20 +95,37 @@ function App() {
     return <div className="squidload full-screen-loader"></div>
   }
 
-  return ( //data-theme={darkMode ? "dark" : "light"}
-    <AppRouter/>
+  return (
+    <div className="squid-app max-h-screen min-h-screen w-full flex flex-col wallpaper dark:text-white" >
+      <Navigation />
+      <div className="flex min-h-full flex-grow border-gray-300" >
+        {isLoggedIn ? <RoomsList/> : <span/>}
+        <Switch>
+          <Route path="/login">
+            {isLoggedIn ? <Redirect to="/" /> : <Login />}
+          </Route>
+
+          <PrivateRoute path="/profile/:username" component={Profile}> </PrivateRoute> 
+          <PrivateRoute path="/searchresults?:query" component={SearchResults}> </PrivateRoute> 
+          <PrivateRoute path="/rooms/:roomName" > <Room/> </PrivateRoute> 
+          <PrivateRoute path="/"> <Main/> </PrivateRoute>
+        </Switch>
+        {isLoggedIn ? <UsersList/> : <span/>}
+      </div>
+      
+    </div>
   );
-}
+};
 
 interface PrivateRouteProps extends RouteProps {
-	// tslint:disable-next-line:no-any
 	children: any;
 }
 
 const PrivateRoute = (props: PrivateRouteProps) => {
 	const { children : Children, ...rest } = props;
-  const loggedIn = getToken();
+  const loggedIn = useAppSelector(state => state.userState.isLoggedIn);
   return (
+    
     <Route
       {...rest}
       render={({ location }) =>
@@ -130,4 +144,4 @@ const PrivateRoute = (props: PrivateRouteProps) => {
   );
 }
 
-export default App;
+export default AppRouter;

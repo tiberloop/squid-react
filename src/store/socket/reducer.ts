@@ -4,8 +4,7 @@ handles the appropriate responses to the socket actions
 import { CONNECTION_CHANGED } from './actions';
 
 const INITIAL_STATE = {
-  connected: false,
-  port: '3001'
+  connected: false
 };
 
 function socketReducer(state = INITIAL_STATE, action: { type: string, port: string, connected: boolean }) {

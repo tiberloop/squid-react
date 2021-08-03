@@ -4,13 +4,14 @@ defines the redux store. Contains the reducers for socket state and messages sta
 
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import socketReducer from './socket/reducer';
-import messageReducer from './message/reducer';
+import roomReducer from './rooms/reducer';
 import socketMiddleware from './socket/middleware';
+import roomsMiddleware from './rooms/middleware';
 import userReducer from './user/reducer';
 
 const rootReducer = combineReducers({
   socketState: socketReducer,
-  messageState: messageReducer,
+  roomState: roomReducer,
   userState: userReducer
 });
 
@@ -18,7 +19,7 @@ const rootReducer = combineReducers({
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const index = {
-  ...createStore(rootReducer, composeEnhancers(applyMiddleware(socketMiddleware)))
+  ...createStore(rootReducer, composeEnhancers(applyMiddleware(socketMiddleware))) // maybe: applyMiddleware(roomsMiddleware)))
 };
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

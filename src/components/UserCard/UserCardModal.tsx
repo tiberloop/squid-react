@@ -78,7 +78,7 @@ export default function UserCardModal(props: any) {
                   <img src={src} alt="Avatar" className="mx-auto object-cover flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 sm:mx-0 sm:h-10 sm:w-10" />
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                      {user.username}
+                      {user?.username}
                     </Dialog.Title>
                     <div className="mt-2">
                       <div className="grid grid-cols-3 gap-6">
@@ -87,7 +87,7 @@ export default function UserCardModal(props: any) {
                             Full Name
                           </label>
                           <div className="mt-1 flex w-full rounded-md shadow-sm">
-                            <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user.real_name}</div>
+                            <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user?.real_name}</div>
                           </div>
                         </div>
                         <div className="col-span-3 sm:col-span-2">
@@ -95,7 +95,7 @@ export default function UserCardModal(props: any) {
                             Email
                           </label>
                           <div className="mt-1 flex w-full rounded-md shadow-sm">
-                            <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user.email}</div>
+                            <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user?.email}</div>
                           </div>
                         </div>
                         <div className="col-span-3 sm:col-span-2">
@@ -103,7 +103,7 @@ export default function UserCardModal(props: any) {
                             Date Joined
                           </label>
                           <div className="mt-1 flex w-full rounded-md shadow-sm">
-                            <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user.date_joined}</div>
+                            <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >{user?.date_joined}</div>
                           </div>
                         </div>
                       </div>

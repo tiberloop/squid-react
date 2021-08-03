@@ -1,10 +1,16 @@
 /**
 handles the appropriate responses to the actions for a user
 */
-import { USER_LOGGED_IN, USER_LOGGED_OUT } from './actions';
+import { I_LOGGED_IN, I_LOGGED_OUT, USER_BECAME_ACTIVE, USER_BECAME_INACTIVE } from './actions';
 import { ISquidUser } from 'utils/apiObjects';
 
-const INITIAL_STATE = {
+interface IUserState {
+  user: ISquidUser,
+  isLoggedIn: boolean,
+  activeUsers: string[]
+}
+
+const INITIAL_STATE: IUserState = {
   user: {
     ID: "ID",
     avatar: '',
@@ -13,21 +19,35 @@ const INITIAL_STATE = {
     real_name: "Squid",
     username: "squid_user",
   },
-  isLoggedIn: false
+  isLoggedIn: false,
+  activeUsers: []
 };
 
-function userReducer(state = INITIAL_STATE, action: {user?: ISquidUser, type: string}) {
+function userReducer(state = INITIAL_STATE, action: {user?: ISquidUser, type: string, user_id?: string}) {
   switch (action.type) {
-    case USER_LOGGED_IN:
+    case I_LOGGED_IN:
       // make update to user store and update the DB
       return Object.assign({},
         state, {user: action.user, isLoggedIn: true}
       );
-    case USER_LOGGED_OUT:
+    case I_LOGGED_OUT:
       // remove user from store
       return Object.assign({},
         state, {user: INITIAL_STATE.user, isLoggedIn: false}
       );
+    case USER_BECAME_ACTIVE:
+      if (action.user_id) {
+        return {
+          ...state, // copy current state
+          activeUsers: state.activeUsers.concat(action.user_id)
+        };
+      }
+      return state;
+    case USER_BECAME_INACTIVE:
+      return {
+        ...state, // copy current state
+        activeUsers: state.activeUsers.filter(userId => userId !== action.user_id)
+      };
     default:
       return state;
   }

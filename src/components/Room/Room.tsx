@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, ReactElement } from "react";
 import axios from 'axios';
 import Message from 'components/Message'
 import { getToken } from 'services/authenticationService'
 import LoadingSpinner from "components/helpers/LoadingSpinner";
 import CreateChannelModal from "components/CreateChannel";
 import RoomsList from "components/RoomsList";
+import { useLocation } from 'react-router-dom';
 import store from 'store';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
@@ -14,7 +15,15 @@ import { getAllRooms, getRoomMessages, addUsersToRoom, getDM, getUsersList } fro
 import { reactToMessage, setAsTyping, setAsNotTyping } from 'store/socket/actions';
 import { sendMessage, setRoom } from "store/rooms/actions";
 
-function Main(props: IMainDispatchProps) {
+interface IRoomStateType {
+  room: ISquidRoom;
+}
+
+function Room(props: IRoomDispatchProps) {
+  const currentRoom: ISquidRoom = useLocation<IRoomStateType>().state.room;
+
+
+
   const [createChannelOpen, setCreateChannelOpen] = useState(false)
   const loggedInUser: ISquidUser = useAppSelector((state) => state.userState.user);
   const [roomIds, setRoomIds] = useState<any>([])
@@ -22,59 +31,32 @@ function Main(props: IMainDispatchProps) {
   const [allUsers, setAllUsers] = useState<any>([])
   const [messagesDict, setMessagesDict] = useState<any>({})
   const [user, setUser] = useState<any>(null)
-  const [currentRoom, setCurrentRoom] = useState<ISquidRoom | null>(null)
   const [currentRoomMessages, setCurrentRoomMessages] = useState<ISquidMessage[]>([])
   const [loading, setLoading] = useState<any>(false)
   const [message, setMessage] = useState<string>('')
 
   const roomsInState: ISquidRoom[] = useAppSelector((state) => state.roomState.rooms); // will update when the state changes
 
-  const chatRoomRef: any = useRef<HTMLInputElement>();
-  // useEffect(() => {
-  //   if (currentRoom) {
-  //     // seems that currentroom is udpating without this logic. we can probably just shallow copy:
-  //     // setCurrentRoomMessages([]...currentRoom.messages]);
-  //     console.log(roomsInState);
-  //     var tempRoom = roomsInState.find((room) => room.room_id === currentRoom.room_id );
-  //     // debugger;
-  //     if (tempRoom) {
-  //       setCurrentRoomMessages([...tempRoom.messages]);
-  //     }
-  //   }
-  // }, [roomsInState]);
+  const chatRoomRef = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => { 
-  //   // debugger;
-  //   getAllRooms().then((rooms: ISquidRoom[]) => {
-  //     setRooms(rooms || []);
-  //     rooms.forEach(room => props.setRoom(room));
-  //   })
-  //   getUsersList().then((response: ISquidUser[]) => {
-  //     // setUser(res.data[0])
-  //     setAllUsers(response);
-  //   })
-  //   setUser(loggedInUser);
-  // }, [])
-
-
-  // function to retrieve dms. currently has issues running locally
-  const selectDM = (userId: any) => {
-    setLoading(true);
-    getDM(userId).then((room: ISquidRoom) => {
-      // debugger;
-      props.setRoom(room);
-      setLoading(false);
-      console.log(room.room_id);
-      setCurrentRoom(room);
-    })
-  }
-
-  const selectChat = (room: any) => {
-    setCurrentRoom(room)
-    setMenuOrChat(true)
-  }
+  useEffect(() => {
+    setUser(loggedInUser);
+  })
+  useEffect(() => {
+    if (currentRoom) {
+      console.log(roomsInState); // this is definitely changing
+      var tempRoom = roomsInState.find((room) => room.room_id === currentRoom.room_id );
+      
+      if (tempRoom) {
+        // setCurrentRoomMessages([...tempRoom.messages.slice(0,tempRoom.messages.length-1), tempRoom.messages[tempRoom.messages.length-1]]); // this defnitely SHOULD be changing. new reference and new contents
+        setCurrentRoomMessages([...tempRoom.messages]); // this defnitely SHOULD be changing. new reference and new contents
+        scrollToBottom();
+      }
+    }
+  }, [roomsInState]);
 
   const scrollToBottom = () => {
+    
     if (chatRoomRef && chatRoomRef.current) {
 
       chatRoomRef.current.scrollTop = chatRoomRef.current.scrollHeight;
@@ -94,7 +76,7 @@ function Main(props: IMainDispatchProps) {
     if (currentRoom) {
       setLoading(true);
       // debugger;
-      getRoomMessages(currentRoom.room_id).then(
+      getRoomMessages(currentRoom.room_id, currentRoom.bucket_number).then(
         (messages: ISquidMessage[]) => {
           // var messages: string[] = parseMessages(res.data.reverse());
           setCurrentRoomMessages(messages);
@@ -156,13 +138,14 @@ function Main(props: IMainDispatchProps) {
                         });
     }
     console.log("messageSent");
+    document.getElementById('composeMessageBox')?.setAttribute('value', '');
     scrollToBottom()
     setMessage('')
   }
 
   const onEnterPress = (e: any) => {
     if (e.keyCode === 13 && e.shiftKey === false) {
-      sendMessage()
+      sendMessage();
     }
   }
 
@@ -210,7 +193,7 @@ function Main(props: IMainDispatchProps) {
         <div className="flex justify-between border-b border-gray-300">
           <div className="flex">
             
-            <span className="p-2">{rooms.find((r: ISquidRoom) => r.room_id === currentRoom?.room_id)?.name || 'No room selected'}</span>
+            <span className="p-2">{currentRoom.name || 'No room selected'}</span>
           </div>
           <button className="p-2 hover:bg-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -219,7 +202,7 @@ function Main(props: IMainDispatchProps) {
           </button>
         </div>
         <div
-          id="messages"
+          className='squid-scrollable'
           ref={chatRoomRef}
           style={{ flexGrow: 5 }}
         >
@@ -229,7 +212,7 @@ function Main(props: IMainDispatchProps) {
             </div>
           )}
           {Boolean(currentRoomMessages) && Boolean(currentRoomMessages.length) && currentRoomMessages.map((m: any, i: any) => (
-            <Message message={m} index={i} />
+            <Message message={m} index={i} key={i}/>
           ))}
         </div>
         <div className="flex-grow flex flex-col">
@@ -237,7 +220,7 @@ function Main(props: IMainDispatchProps) {
             <div className="p-2 pb-0">
               
               <textarea
-              
+              id="messageBox"
               value={message}
               onKeyDown={onEnterPress}
               onChange={(e) => { type(e.target.value, currentRoom?.room_id) }}
@@ -258,12 +241,12 @@ function Main(props: IMainDispatchProps) {
   )
 }
 
-interface IMainStateProps {
+interface IRoomStateProps {
   roomState: {
     rooms: []
   }
 }
-interface IMainDispatchProps {
+interface IRoomDispatchProps {
   sendMessage: (message:  IMessageToDeliver) => void;
   reactToMessage: (reactionObject:  {
                                       reaction: string;
@@ -274,7 +257,7 @@ interface IMainDispatchProps {
   setRoom: (room: ISquidRoom) => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): IMainDispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch<any>): IRoomDispatchProps => ({
   sendMessage: (message:  IMessageToDeliver) => dispatch(sendMessage(message)),
   reactToMessage: (reactionObject:  {
                                       reaction: string;
@@ -285,8 +268,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): IMainDispatchProps => ({
   setRoom: (room: ISquidRoom) => dispatch(setRoom(room))
 });
 
-const mapStateToProps = (state: IMainStateProps) => ({
+const mapStateToProps = (state: IRoomStateProps) => ({
   rooms: state.roomState.rooms
 });
 // @ts-ignore // ignoring because it is not matching types in mapDispatchToProps
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Room);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Fuse from "fuse.js";
 import { RouteComponentProps, useHistory, useLocation, Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from "hooks";
 import { ISquidUser } from "utils/apiObjects";
 /** interface for the items in the url */
 interface ISearchResultsMatchProps {
@@ -22,7 +23,9 @@ interface IProfileStateType {
 
 
 function SearchResults(props: ISearchResultsProps) {
+  const history = useHistory();
   const query: string = props.match.params.query;
+  const isLoggedIn: boolean = useAppSelector((state) => state.userState.isLoggedIn);
   const data: any[] = useLocation<IProfileStateType>().state.data;
   console.log(query);
   console.log(data);
@@ -34,6 +37,9 @@ function SearchResults(props: ISearchResultsProps) {
   });
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      history.push('/login');
+    }
     var results: any[] = []
     var result: Fuse.FuseResult<ISquidUser>[] = fuse.search(query);
     console.log(result);

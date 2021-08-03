@@ -1,18 +1,22 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import { createRoom, addUsersToRoom } from 'utils/apiHelper'
+import { useAppSelector } from "hooks";
 import axios from 'axios'
 
 export default function CreateChannelModal(props: any) {
   const {open, setOpen} = props
   // const [open, setOpen] = useState(true)
-
+  const loggedInUser = useAppSelector((state) => state.userState.user);
   const cancelButtonRef = useRef(null)
 
   const [newName, setNewName] = useState('')
 
   const createChannel = () => {
-    axios.post(`/rooms/create`, { name: newName }).then(res => {
+    createRoom(newName).then(
+      roomId => {
+      // addUsersToRoom(roomId, [loggedInUser.ID]);
       setOpen(!open)
     })
   }

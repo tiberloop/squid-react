@@ -17,7 +17,6 @@ function Message(props: any) {
   //     setSrc(srcurl)
   //   })
   // }
-
   const [avatars, setAvatars] = useStore('avatars')
 
   useEffect(() => {
@@ -25,13 +24,36 @@ function Message(props: any) {
     if (avatar) { setSrc(URL.createObjectURL(avatar.src)) }
   }, [avatars])
 
+  const formatTimeSent = (timeSent: number | null) => {
+    if (message.time_sent != null)  {
+      // first we have to create a new Date object
+      // but python date time is in seconds, not milliseconds, so multiply by 1000
+      var today = new Date(new Date().setHours(0,0,0,0)); // set "today" to nearest previous midnight
+      var updatedTimeSent = new Date(message.time_sent*1000);
+      var dayDifference = (today.getTime() - updatedTimeSent.getTime()) / (1000 * 3600 * 24);
 
-  const timeSentFormatted = format(new Date(message.time_sent), 'p')
+      if (dayDifference > 6 ) {
+        return format(updatedTimeSent.getTime(), 'eeee MMM do p');
+      }
+      else if (dayDifference > 1) {
+        return format(updatedTimeSent.getTime(), 'eeee p');
+      }
+      else if (dayDifference > 0) {
+        return format(updatedTimeSent.getTime(), "'Yesterday' p");
+      }
+      return format(updatedTimeSent, "'Today' p");
+
+    }
+    return null;
+  }
+
+  // const timeSentFormatted = message.time_sent != null ? format(new Date(message.time_sent*1000), 'p') : null;
+  const timeSentFormatted = formatTimeSent(message.time_sent);
 
   return (
-  <div className={`flex p-1 ${(index % 2) && 'bg-gray-100 dark:bg-primaryDarkContrast'}`}>
+  <div className={`flex p-1 items-center ${(index % 2) && 'bg-gray-100 dark:bg-primaryDarkContrast'}`}>
     <UserCardModal open={open} setOpen={setOpen} userId={message.user_id} />
-    <div onClick={() => setOpen(true)} className="rounded">
+    <div onClick={() => setOpen(true)} className="rounded p-1">
       <img className="rounded object-cover" src={src} alt="Avatar" style={{ height: '32px', width: '32px' }} />
     </div>
     <div className="message-sender ml-1">

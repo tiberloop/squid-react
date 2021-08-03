@@ -13,7 +13,7 @@ import {
 
 import store from './store';
 
-const auth = checkAuthentication()
+// const auth = checkAuthentication()
 
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 // axios.defaults.baseURL = "http://127.0.0.1:5000/api/"
