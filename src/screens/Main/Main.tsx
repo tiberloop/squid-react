@@ -205,9 +205,12 @@ function Main(props: IMainDispatchProps) {
     <div className="flex min-h-full flex-grow border-gray-300">
 
       <div
-        className={`bg-white dark:bg-primaryDark flex flex-grow flex-col border-gray-300 ${isMobile ? !menuOrChat ? 'hidden' : '' : ''}`}
+        className={`bg-white dark:bg-primaryDark flex flex-grow flex-col justify-center border-gray-300`}
       >
-        <div className="flex justify-between border-b border-gray-300">
+        Welcome to SquidChat...
+        <br></br>
+        Go click some stuff
+        {/* <div className="flex justify-between border-b border-gray-300">
           <div className="flex">
             
             <span className="p-2">{rooms.find((r: ISquidRoom) => r.room_id === currentRoom?.room_id)?.name || 'No room selected'}</span>
@@ -225,7 +228,7 @@ function Main(props: IMainDispatchProps) {
         >
           {loading && (
             <div className="squidload w-full h-full flex justify-center justify-items-center items-center">
-              {/* <LoadingSpinner className="m-auto" /> */}
+              
             </div>
           )}
           {Boolean(currentRoomMessages) && Boolean(currentRoomMessages.length) && currentRoomMessages.map((m: any, i: any) => (
@@ -252,7 +255,7 @@ function Main(props: IMainDispatchProps) {
             <div/>
           }
           <span className="px-2 pb-2">{someonesTyping && ('someone is typing...')}</span>
-        </div>
+        </div> */}
       </div>
     </div>
   )

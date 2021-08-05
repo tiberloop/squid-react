@@ -63,7 +63,6 @@ export function getDM(userId: string): Promise<ISquidRoom> {
 /** GET:  Returns paginated lists of messages sent for the given room.
  * Use a URL query to ask for the specific bucket_number; this defaults to 0.*/
 export async function getRoomMessages(roomId: string, bucketNumber: number = 1): Promise<ISquidMessage[]> {
-  // debugger;
   return new Promise((resolve, reject) => {
     axios.get(
       `/rooms/${roomId}/messages?bucket_number=${bucketNumber}`

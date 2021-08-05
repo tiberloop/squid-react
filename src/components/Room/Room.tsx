@@ -76,19 +76,25 @@ function Room(props: IRoomDispatchProps) {
     if (currentRoom) {
       setLoading(true);
       // debugger;
-      getRoomMessages(currentRoom.room_id, currentRoom.bucket_number).then(
-        (messages: ISquidMessage[]) => {
-          // var messages: string[] = parseMessages(res.data.reverse());
-          setCurrentRoomMessages(messages);
-          // console.log('res.data.messages', messages);
-          scrollToBottom()
-          setLoading(false)
-        },
-        error => {
-          console.log("This room has no messages.");
-          setLoading(false);
-        })
-
+      if (currentRoom.bucket_number != 0) {
+        getRoomMessages(currentRoom.room_id, currentRoom.bucket_number).then(
+          (messages: ISquidMessage[]) => {
+            // var messages: string[] = parseMessages(res.data.reverse());
+            setCurrentRoomMessages(messages);
+            // console.log('res.data.messages', messages);
+            scrollToBottom()
+            setLoading(false)
+          },
+          error => {
+            console.log("This room has no messages.");
+            setLoading(false);
+          })
+      }
+      else {
+        setCurrentRoomMessages([]);
+        scrollToBottom()
+        setLoading(false)
+      }
     }
   }, [currentRoom])
 
@@ -138,7 +144,7 @@ function Room(props: IRoomDispatchProps) {
                         });
     }
     console.log("messageSent");
-    document.getElementById('composeMessageBox')?.setAttribute('value', '');
+    document.getElementById('composeMessageBox')?.setAttribute('value', ''); // doesn't work
     scrollToBottom()
     setMessage('')
   }
@@ -174,7 +180,15 @@ function Room(props: IRoomDispatchProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dimensions.width]);
 
-  
+  const nameToDisplay = () => {
+    if (currentRoom) {
+      if (currentRoom.is_dm) {
+        return currentRoom.display_name;
+      }
+      return currentRoom.name;
+    }
+    return "No room selected"
+  }
   /*
   parse the messages from the bucketed messages return
   */
@@ -193,7 +207,7 @@ function Room(props: IRoomDispatchProps) {
         <div className="flex justify-between border-b border-gray-300">
           <div className="flex">
             
-            <span className="p-2">{currentRoom.name || 'No room selected'}</span>
+            <span className="p-2">{ nameToDisplay() }</span>
           </div>
           <button className="p-2 hover:bg-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -211,6 +225,7 @@ function Room(props: IRoomDispatchProps) {
               {/* <LoadingSpinner className="m-auto" /> */}
             </div>
           )}
+          {!Boolean(currentRoomMessages.length) ? `This is the beginning of your messages with ${nameToDisplay()}` : ""}
           {Boolean(currentRoomMessages) && Boolean(currentRoomMessages.length) && currentRoomMessages.map((m: any, i: any) => (
             <Message message={m} index={i} key={i}/>
           ))}

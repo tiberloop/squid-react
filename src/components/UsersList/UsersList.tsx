@@ -8,11 +8,11 @@ import { useHistory } from 'react-router-dom';
 
 function UsersList() {
   const history = useHistory();
-  const isMobile = false;
   const menuOrChat = false;
   const [allUsers, setAllUsers] = useState<any>([]);
   const [allAvatars, setAllAvatars] = useState<{[id: string]: string}>({});
   const loggedInUser: ISquidUser = useAppSelector((state) => state.userState.user);
+  const isMobile: boolean = useAppSelector(state => state.environmentState.isMobile);
 
   useEffect(() => {
     var avatars: {[id: string]: string} = {};
@@ -38,13 +38,14 @@ function UsersList() {
   // function to retrieve dms
   const selectDM = (userId: any) => {
     getDM(userId).then((room: ISquidRoom) => {
+      // debugger;
       console.log(room.room_id);
-      history.push({pathname: `/rooms/${room.name}`, state: {room: room}});
+      history.push({pathname: `/rooms/${room.display_name}`, state: {room: room}});
     })
   }
 
   return (
-    <div className={`${isMobile ? 'flex-grow' : 'flex w-1/6 mr-0'}`} style={{maxHeight: 'inherit'}}>
+    <div className={`${isMobile ? 'flex w-full' : 'flex w-1/6 mr-0'}`} style={{maxHeight: 'inherit'}}>
       <div className={`bg-white dark:bg-primaryDark border-l border-r h-auto border-gray-300 w-full ${isMobile ? '' : 'max-w-lg'}`}>
         <div className="flex justify-between border-b border-gray-300">
           <strong className="p-2">Users</strong>

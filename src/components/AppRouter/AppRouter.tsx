@@ -18,6 +18,7 @@ import Login from 'screens/Login'
 import Main from 'screens/Main';
 import Profile from 'screens/Profile';
 import { useAppDispatch, useAppSelector } from "hooks";
+import { setWindowSize } from 'store/environment/actions';
 import SearchResults from 'screens/SearchResults';
 import RoomsList from 'components/RoomsList';
 import UsersList from 'components/UsersList';
@@ -31,7 +32,8 @@ function AppRouter() {
   // const [loggedIn, setLoggedIn] = useState<null | string>(null);
 
   const isLoggedIn = useAppSelector(state => state.userState.isLoggedIn);
-  
+  const isMobile = useAppSelector(state => state.environmentState.isMobile);
+  const dispatch = useAppDispatch();
   // always call for refresh when the app loads
   useEffect( () => {
     waitForAuthentication();
@@ -39,16 +41,30 @@ function AppRouter() {
 
   const waitForAuthentication = () => {
     refreshTokenEvent().then(() => {
+      getAndSetWindowSize();
       setTimeout(() => {
         setLoading(false);
       }, 200);
     })
   }
 
-  // watch for changes in params
-  // useEffect(() => {
-  //   setLoggedIn(localStorage.getItem("jwt"));
-  // }, [params])
+  const getAndSetWindowSize = () => {
+    var tempIsMobile = window.innerWidth <= window.innerHeight;
+    dispatch(setWindowSize(tempIsMobile));
+  }
+
+  const setMobileTheme = () => {
+    if (isMobile) {
+      const root = window.document.documentElement;
+      root.classList.remove("light");
+      root.classList.add("dark");
+      localStorage.setItem('THEME', "dark");
+    }
+  }
+
+  useEffect(() => {
+    setMobileTheme();
+  }, [isMobile])
 
   const [users, setUsers] = useStore('users')
   const [avatars, setAvatars] = useStore('avatars')
@@ -96,10 +112,10 @@ function AppRouter() {
   }
 
   return (
-    <div className="squid-app max-h-screen min-h-screen w-full flex flex-col wallpaper dark:text-white" >
+    <div className={`squid-app max-h-screen min-h-screen w-full flex ${isMobile ? "flex-col-reverse" : "flex-col"} wallpaper dark:text-white`}>
       <Navigation />
-      <div className="flex min-h-full flex-grow border-gray-300" >
-        {isLoggedIn ? <RoomsList/> : <span/>}
+      <div className={`flex min-h-full flex-grow border-gray-300 ${isMobile ? "justify-center" : ""}`} >
+        {isLoggedIn && !isMobile ? <RoomsList/> : <span/>}
         <Switch>
           <Route path="/login">
             {isLoggedIn ? <Redirect to="/" /> : <Login />}
@@ -108,9 +124,12 @@ function AppRouter() {
           <PrivateRoute path="/profile/:username" component={Profile}> </PrivateRoute> 
           <PrivateRoute path="/searchresults?:query" component={SearchResults}> </PrivateRoute> 
           <PrivateRoute path="/rooms/:roomName" > <Room/> </PrivateRoute> 
+          {/* only allow these routes if in mobile*/}
+            {isMobile ? <PrivateRoute path="/userslist" > <UsersList/> </PrivateRoute>: ""}
+            {isMobile ? <PrivateRoute path="/rooms" > <RoomsList/> </PrivateRoute> : "" }
           <PrivateRoute path="/"> <Main/> </PrivateRoute>
         </Switch>
-        {isLoggedIn ? <UsersList/> : <span/>}
+        {isLoggedIn && !isMobile ? <UsersList/> : <span/>}
       </div>
       
     </div>

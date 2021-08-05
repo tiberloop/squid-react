@@ -8,11 +8,13 @@ import roomReducer from './rooms/reducer';
 import socketMiddleware from './socket/middleware';
 import roomsMiddleware from './rooms/middleware';
 import userReducer from './user/reducer';
+import envirommentReducer from './environment/reducer';
 
 const rootReducer = combineReducers({
   socketState: socketReducer,
   roomState: roomReducer,
-  userState: userReducer
+  userState: userReducer,
+  environmentState: envirommentReducer
 });
 
 // @ts-ignore
