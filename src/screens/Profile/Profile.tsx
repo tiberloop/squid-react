@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState, SyntheticEvent } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { RouteComponentProps, useHistory, useLocation } from 'react-router-dom';
@@ -53,13 +53,15 @@ function Profile(props: IProfileProps) {
   }, [])
 
   useEffect(() => {
-    // debugger;
     setIsCurrentUser(providedUserId === loggedInUser.ID);
     getUserAvatar(providedUserId).then(response => {
       setAvatar(response);
     })
     .catch(error => console.log(error.response));
-
+    
+  }, [providedUserId])
+  
+  useEffect(() => {
     if (isCurrentUser) {
       setUser(loggedInUser);
     }
@@ -69,9 +71,7 @@ function Profile(props: IProfileProps) {
       })
       .catch(error => console.log(error.response))
     }
-    
-  }, [providedUserId])
-  
+  }, [isCurrentUser, providedUserId])
   
   useEffect(() => {
     setUser(loggedInUser);
@@ -90,39 +90,51 @@ function Profile(props: IProfileProps) {
   }
   
   const updateProfile = () => {
-    // if (user) {
-    //   var username = getPureValue(newUsername, loggedInUser.username);
-    //   var email = getPureValue(newEmail, loggedInUser.email);
-    //   var realName = getPureValue(newRealName, loggedInUser.real_name);
-    //   var updatedUser = {
-    //     ID: user.ID,
-    //     avatar: user.avatar,
-    //     email: email,
-    //     previous_avatars: user.previous_avatars,
-    //     real_name: realName,
-    //     username: username
-    //   }
-    //   updateUser(user.ID, 
-    //     {
-    //       username: newUsername,
-    //       real_name: newRealName,
-    //       email: newEmail
-    //     })
-    //     .then(response => {
-    //       dispatch(updateUserInStore(
-    //         updatedUser
-    //       ));
-    //       setIsEditing(false);
-    //     })
-    //     .catch(error => console.log(error))
-
-    // }
+    if (user) {
+      debugger;
+      setTimeout(() => {
+        var username = getPureValue(newUsername, loggedInUser.username);
+        var email = getPureValue(newEmail, loggedInUser.email);
+        var realName = getPureValue(newRealName, loggedInUser.real_name);
+        var updatedUser = {
+          ID: user.ID,
+          avatar: user.avatar,
+          email: email,
+          previous_avatars: user.previous_avatars,
+          real_name: realName,
+          username: username
+        }
+        updateUser(user.ID, 
+          {
+            username: newUsername,
+            real_name: newRealName,
+            email: newEmail
+          })
+          .then(response => {
+            dispatch(updateUserInStore(
+              updatedUser
+            ));
+            setIsEditing(false);
+          })
+          .catch(error => console.log(error))
+        }, 1000)
+    }
     setIsEditing(false);
   }
 
   /** returns the original value for that parameter if the newValue is still empty */
   const getPureValue = (newValue: string, originalValue: string) => {
     return newValue !== "" ? newValue : originalValue;
+  }
+
+  const setUsernameBeforeSave = (value: string) => {
+    setUsername(newUsername + value);
+    console.log(newUsername);
+  }
+
+  const checkE = (e: any) => {
+    debugger;
+    console.log(e);
   }
 
   // let button = <div/>;
@@ -163,7 +175,8 @@ function Profile(props: IProfileProps) {
   }, [isEditing, isCurrentUser])
   
   return (
-    <div onSubmit={(e) => e.preventDefault()} className="inline-block bg-black lg:max-w-xl m-2 sm:mx-auto align-bottom bg-white dark:bg-primaryDark rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+    
+    <div className="inline-block lg:max-w-xl m-2 sm:mx-auto align-bottom bg-white dark:bg-primaryDark rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
       <div className="bg-gray-50 dark:bg-primaryDark px-4 py-3 sm:px-6 sm:flex sm:flex-column justify-space-between">
       { isCurrentUser ?
         <span className="btn-edit" >
@@ -207,7 +220,7 @@ function Profile(props: IProfileProps) {
           <div className="md:block flex md:items-stretch items-start w-full">
             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
               <div className="flex flex-row">
-                <div className="flex flex-shrink-0 justify-center items-center max-h-32 h-32 h-32 md:hidden">
+                <div className="flex flex-shrink-0 justify-center items-center max-h-32 h-32 md:hidden">
                   <img src={`data: image/png; base64,${avatarImg}`} className="w-24 h-24 min-w-100 rounded-full"/>
                 </div>
                 <div className="m-auto">
@@ -224,7 +237,8 @@ function Profile(props: IProfileProps) {
                     <input 
                     className="p-1 border-b border-gray-300 flex-1 block w-full rounded sm:text-sm dark:bg-primaryDark"
                     placeholder={user?.username}
-                    value={newUsername} onChange={(e) => { setUsername(e.target.value) }}>
+                    type="text"
+                    value={newUsername} onChange={(e: any) => { setUsername(e.target.value) }}> 
                       
                     </input>
                   </div>
@@ -245,7 +259,8 @@ function Profile(props: IProfileProps) {
                         <input
                         className="p-1 border-b border-gray-300 flex-1 block w-full rounded sm:text-sm dark:bg-primaryDark"
                         placeholder={user?.real_name}
-                        value={newRealName} onChange={(e) => { setRealName(e.target.value) }} type="text" id="username" />
+                        type="text"
+                        value={newRealName} onChange={(e) => { setRealName(e.target.value) }} id="username" />
                       }
                       </div>
                   </div>
@@ -261,13 +276,14 @@ function Profile(props: IProfileProps) {
                         <input
                         className="p-1 border-b border-gray-300 flex-1 block w-full rounded sm:text-sm dark:bg-primaryDark"
                         placeholder={user?.email}
-                        value={newEmail} onChange={(e) => { setEmail(e.target.value) }} type="text" id="username" />
+                        type="email"
+                        value={newEmail} onChange={(e) => { setEmail(e.target.value) }} id="email" />
                       }
                     </div>
                   </div>
                   <div className="col-span-2 md:col-span-3">
                     <label htmlFor="channel-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Date Joned
+                      Date Joined
                     </label>
                     <div className="mt-1 flex w-full rounded-md shadow-sm">
                       <div className="p-1 border border-gray-300 flex-1 block w-full rounded sm:text-sm" >8/06/2021</div>

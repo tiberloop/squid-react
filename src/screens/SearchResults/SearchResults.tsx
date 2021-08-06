@@ -65,7 +65,7 @@ function SearchResults(props: ISearchResultsProps) {
     <div className="inline-block lg:max-w-xl m-2 sm:mx-auto align-bottom bg-white dark:bg-primaryDark rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
       {searchResults.length > 0 && searchResults.map((result: Fuse.FuseResult<ISquidUser>) => (
         
-        <Link to={{pathname:`/profile/${result.item.username}`, state: {userId: result.item.ID}}} onClick={() => selectUser(result.item)} className="p-2 bg-green w-full text-left block hover:underline">
+        <Link key={result.refIndex} to={{pathname:`/profile/${result.item.username}`, state: {userId: result.item.ID}}} onClick={() => selectUser(result.item)} className="p-2 bg-green w-full text-left block hover:underline">
           {/* <button className="p-2 bg-green w-full text-left block hover:underline" onClick={() => selectUser(result.item)}> */}
           {result.item.username} other {result.item.email} AH {result.item.real_name}
         {/* </button> */}

@@ -47,7 +47,7 @@ function Navigation() {
           : 
           <span style={{display: "none"}}/>
         }
-				{!isMobile ?
+				{/* {!isMobile ?
           <SearchBar theme={theme}/>
           :
           <Link to="/" className="flex p-2 hover:text-gray-500">
@@ -55,7 +55,7 @@ function Navigation() {
               <FontAwesomeIcon icon={faSearch} size="2x" />
             </span>
           </Link>
-        }
+        } */}
         <div className="flex row items-center" style={isMobile && !isLoggedIn ? {display: "none"} : {}}>
           {!isMobile ?
           <div className="flex p-2">

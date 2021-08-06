@@ -117,6 +117,7 @@ export function updateUser(userId: string,
                            params: {username:  string,
                                     real_name: string,
                                     email:     string}): Promise<any> {
+                                      debugger;
   return new Promise((resolve, reject) => {
     // debugger;
     axios.post(
@@ -179,6 +180,20 @@ export function addUsersToRoom(roomId: string, users: string[]): Promise<any> {
         error => {
           reject(error);
         }
+    ).catch(error => reject(error));
+  })
+}
+
+export function getImageUpload(imgId: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    axios.get(
+      `/uploads/${imgId}`,
+      {
+        responseType: 'arraybuffer'
+      }
+    ).then(response => {
+        resolve(Buffer.from(response.data, 'binary').toString('base64'));
+      }
     ).catch(error => reject(error));
   })
 }

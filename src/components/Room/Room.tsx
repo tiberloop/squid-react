@@ -7,6 +7,7 @@ import CreateChannelModal from "components/CreateChannel";
 import RoomsList from "components/RoomsList";
 import { useLocation } from 'react-router-dom';
 import store from 'store';
+import { SyntheticEvent } from "react";
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { useAppSelector } from "hooks";
@@ -38,19 +39,25 @@ function Room(props: IRoomDispatchProps) {
   const roomsInState: ISquidRoom[] = useAppSelector((state) => state.roomState.rooms); // will update when the state changes
 
   const chatRoomRef = useRef<HTMLDivElement>(null);
+  const [currentBucketNumber, setCurrentBucketNumber] = useState<number>(currentRoom.bucket_number);
 
   useEffect(() => {
     setUser(loggedInUser);
-  })
+    updateMessages();
+  });
+
   useEffect(() => {
     if (currentRoom) {
       console.log(roomsInState); // this is definitely changing
       var tempRoom = roomsInState.find((room) => room.room_id === currentRoom.room_id );
       
-      if (tempRoom) {
+      if (tempRoom && tempRoom.messages) {
         // setCurrentRoomMessages([...tempRoom.messages.slice(0,tempRoom.messages.length-1), tempRoom.messages[tempRoom.messages.length-1]]); // this defnitely SHOULD be changing. new reference and new contents
         setCurrentRoomMessages([...tempRoom.messages]); // this defnitely SHOULD be changing. new reference and new contents
         scrollToBottom();
+      }
+      else {
+        setCurrentRoomMessages([]);
       }
     }
   }, [roomsInState]);
@@ -63,13 +70,44 @@ function Room(props: IRoomDispatchProps) {
     }
   };
 
-
   const dms = allUsers && allUsers.slice(1, allUsers.length)
-
   const channels = rooms && rooms.filter((r: any) => !r.is_dm)
 
-  const updateMessages = (message: ISquidMessage) => {
-    setCurrentRoomMessages([...currentRoomMessages, message]);
+  const doPaginate = (e: SyntheticEvent) => {
+    // debugger;
+    console.log(e.currentTarget.scrollHeight, e.currentTarget.scrollTop, e.currentTarget.clientHeight, currentBucketNumber);
+    var previousHeight = e.currentTarget.scrollHeight;
+    // console.log("scroll", chatRoomRef.current?.scrollHeight);
+    if (e.currentTarget.scrollTop === 0) {
+      // then do the message update
+      if (currentBucketNumber > 1) {
+        setLoading(true);
+        setCurrentBucketNumber(currentBucketNumber-1);
+        getRoomMessages(currentRoom.room_id, currentBucketNumber).then(
+          (messages: ISquidMessage[]) => {
+            setCurrentRoomMessages([...messages, ...currentRoomMessages]);
+            setScrollPosition(e, e.currentTarget.scrollHeight - previousHeight);
+            setLoading(false);
+          },
+          error => {
+            console.log("Man I don't know what happened");
+            setLoading(false);
+         })
+      }
+      console.log("at top");
+    }
+  }
+
+  const setScrollPosition = (e: SyntheticEvent, newPosition: number) => {
+    e.currentTarget.scrollTop = newPosition;
+  }
+
+  const updateMessages = () => {
+    // debugger;
+    // if (chatRoomRef && chatRoomRef.current && chatRoomRef.current.scrollHeight === 0){
+    //   console.log("TOP");
+    // }
+    // setCurrentRoomMessages([...currentRoomMessages, message]);
   }
 
   useEffect(() => {
@@ -79,9 +117,7 @@ function Room(props: IRoomDispatchProps) {
       if (currentRoom.bucket_number != 0) {
         getRoomMessages(currentRoom.room_id, currentRoom.bucket_number).then(
           (messages: ISquidMessage[]) => {
-            // var messages: string[] = parseMessages(res.data.reverse());
             setCurrentRoomMessages(messages);
-            // console.log('res.data.messages', messages);
             scrollToBottom()
             setLoading(false)
           },
@@ -199,10 +235,10 @@ function Room(props: IRoomDispatchProps) {
   }
 
   return (
-    <div className="flex min-h-full flex-grow border-gray-300">
+    <div className="flex min-h-full flex-grow border-gray-300" style={isMobile ? {maxWidth: "67%"} : {}}>
 
       <div
-        className={`bg-white dark:bg-primaryDark flex flex-grow flex-col border-gray-300 ${isMobile ? !menuOrChat ? 'hidden' : '' : ''}`}
+        className={`bg-white dark:bg-primaryDark flex flex-grow flex-col border-gray-300 `}
       >
         <div className="flex justify-between border-b border-gray-300">
           <div className="flex">
@@ -219,6 +255,7 @@ function Room(props: IRoomDispatchProps) {
           className='squid-scrollable'
           ref={chatRoomRef}
           style={{ flexGrow: 5 }}
+          onScroll={(e) => doPaginate(e)}
         >
           {loading && (
             <div className="squidload w-full h-full flex justify-center justify-items-center items-center">
@@ -226,13 +263,14 @@ function Room(props: IRoomDispatchProps) {
             </div>
           )}
           {!Boolean(currentRoomMessages.length) ? `This is the beginning of your messages with ${nameToDisplay()}` : ""}
-          {Boolean(currentRoomMessages) && Boolean(currentRoomMessages.length) && currentRoomMessages.map((m: any, i: any) => (
-            <Message message={m} index={i} key={i}/>
+          {Boolean(currentRoomMessages) && Boolean(currentRoomMessages.length) && currentRoomMessages.map((m: ISquidMessage, i: any) => (
+            <Message message={m} index={i} key={m.time_sent + " "}/>
           ))}
         </div>
         <div className="flex-grow flex flex-col">
           { currentRoom ?
-            <div className="p-2 pb-0">
+            <div className="p-2 pb-0" 
+            >
               
               <textarea
               id="messageBox"
