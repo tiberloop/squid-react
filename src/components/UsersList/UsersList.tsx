@@ -46,14 +46,14 @@ function UsersList() {
 
   return (
     <div className={`${isMobile ? 'flex w-full' : 'flex w-1/6 mr-0'}`} style={{maxHeight: 'inherit'}}>
-      <div className={`bg-white dark:bg-primaryDark border-l border-r h-auto border-gray-300 w-full ${isMobile ? '' : 'max-w-lg'}`}>
+      <div className={`bg-white dark:bg-primaryDark border-l border-b border-r h-auto flex flex-col border-gray-300 w-full ${isMobile ? '' : 'max-w-lg'}`}>
         <div className="flex justify-between border-b border-gray-300">
           <strong className="p-2">Users</strong>
           
         </div>
-        <div className="h-5/6 border-b border-gray-300 squid-scrollable">
+        <div className="border-b border-gray-300 squid-scrollable">
             {allUsers && allUsers.map((user: ISquidUser) => (
-              <div className="flex flex-row items-center px-2 py-0.5" key={user.username}>
+              <div className="flex flex-row items-center px-2 py-0.5" key={user.username +"userslist"}>
                 <div className="relative w-9 h-9">
                 {allAvatars[user.ID] ? <img src={`data: image/png; base64,${allAvatars[user.ID]}`} className="flex-shrink-0 b-2 rounded-full w-8 h-8 min-w-8 min-h-8"/> : <span/>}
                 <FontAwesomeIcon className="absolute right-0 bottom-0 pl-0.5 pt-0.5" icon={isActive(user.ID) === true ? faHeartbeat  : faGhost} color={isActive(user.ID) === true ? "green" :"#444444"} />

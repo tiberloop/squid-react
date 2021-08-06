@@ -2,15 +2,32 @@ import React, { useEffect, useState } from "react";
 import { useStore } from 'store/reactive'
 import axios from "axios";
 import { format } from 'date-fns'
+import { ISquidMessage } from "utils/apiObjects";
+import { getImageUpload } from "utils/apiHelper";
 import UserCardModal from "components/UserCard/";
 import './Message.css';
 
-function Message(props: any) {
+interface IMessageProps  {
+  message: ISquidMessage,
+  index: number
+}
+function Message(props: IMessageProps) {
   const { message, index } = props
   
   const [src, setSrc] = useState('https://res.cloudinary.com/dk-find-out/image/upload/q_70,c_pad,w_1200,h_630,f_auto/DCTM_Penguin_UK_DK_AL639403_k3qity.jpg')
   const [open, setOpen] = useState(false)
+  const [img, setImg] = useState();
 
+  useEffect(() => {
+    // if (message.image_id) {
+    //   getImageUpload(message.image_id).then(
+    //     response => {
+    //       // debugger;
+    //       console.log(response);
+    //     }
+    //   )
+    // }
+  }, [])
   // if (index === 1) {
   //     axios.get(`/uploads/${message.avatar_id}`, { responseType: "blob" }).then(res => {
   //     const srcurl = URL.createObjectURL(res.data)
@@ -21,7 +38,9 @@ function Message(props: any) {
 
   useEffect(() => {
     const avatar = avatars.find((a: any) => a.userId === message.user_id)
-    if (avatar) { setSrc(URL.createObjectURL(avatar.src)) }
+    if (avatar) {
+      setSrc(URL.createObjectURL(avatar.src))
+    }
   }, [avatars])
 
   const formatTimeSent = (timeSent: number | null) => {
@@ -61,6 +80,7 @@ function Message(props: any) {
       <p className='message-text'>
         {message.text}
       </p>
+      {img && <img className="" src={`data: image/png; base64,${img}`}/>}
     </div>
   </div>
   )
