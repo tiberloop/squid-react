@@ -47,6 +47,7 @@ function Login() {
   // }
 
   return (
+    <div className="w-full">
     <div className="p-5 mt-16 border border-gray-8 bg-white dark:bg-primaryDark rounded mx-auto" style={{ maxWidth: '400px' }}>
       {loginOrSignup ?
       (
@@ -102,6 +103,7 @@ function Login() {
         </div>
       </form>
       )}
+    </div>
     </div>
   )
 }
