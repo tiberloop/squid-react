@@ -86,7 +86,8 @@ function Room(props: IRoomDispatchProps) {
         getRoomMessages(currentRoom.room_id, currentBucketNumber).then(
           (messages: ISquidMessage[]) => {
             setCurrentRoomMessages([...messages, ...currentRoomMessages]);
-            setScrollPosition(e, e.currentTarget.scrollHeight - previousHeight);
+            //setScrollPosition(e, e.currentTarget.scrollHeight - previousHeight);
+            scrollToBottom()
             setLoading(false);
           },
           error => {
@@ -181,7 +182,8 @@ function Room(props: IRoomDispatchProps) {
     }
     console.log("messageSent");
     document.getElementById('composeMessageBox')?.setAttribute('value', ''); // doesn't work
-    scrollToBottom()
+    
+    setTimeout(() => scrollToBottom(), 300)
     setMessage('')
   }
 
@@ -235,7 +237,10 @@ function Room(props: IRoomDispatchProps) {
   }
 
   return (
-    <div className="flex min-h-full flex-grow border-gray-300" style={isMobile ? {maxWidth: "67%"} : {}}>
+    <div
+      className="flex min-h-full flex-grow border-gray-300"
+      // style={isMobile ? {maxWidth: "67%"} : {}}
+    >
 
       <div
         className={`bg-white dark:bg-primaryDark flex flex-grow flex-col border-gray-300 `}
