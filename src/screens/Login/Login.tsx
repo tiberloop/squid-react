@@ -68,7 +68,7 @@ function Login() {
           {!loginOrSignup ? (
             <button className="underline text-gray-500" type="button" onClick={() => setLoginOrSignup(!loginOrSignup)}>I already have an account</button>
           ) : (
-            <button className="underline text-gray-500" type="button" onClick={() => setLoginOrSignup(!loginOrSignup)}>Create an account</button>
+            <></> // <button className="underline text-gray-500" type="button" onClick={() => setLoginOrSignup(!loginOrSignup)}>Create an account</button>
           )}
         </div>
       </form>
