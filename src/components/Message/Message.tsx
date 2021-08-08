@@ -72,7 +72,7 @@ function Message(props: IMessageProps) {
   return (
   <div className={`flex p-1 items-center ${(index % 2) && 'bg-gray-100 dark:bg-primaryDarkContrast'}`}>
     <UserCardModal open={open} setOpen={setOpen} userId={message.user_id} />
-    <div onClick={() => setOpen(true)} className="rounded p-1">
+    <div onClick={() => setOpen(true)} className="hover:border-white border border-transparent cursor-pointer rounded">
       <img className="rounded object-cover" src={src} alt="Avatar" style={{ height: '32px', width: '32px' }} />
     </div>
     <div className="message-sender ml-1">
