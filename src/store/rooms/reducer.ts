@@ -30,7 +30,7 @@ function roomReducer(state = INITIAL_STATE, action: {
           ...state, // copy current state
           rooms: state.rooms.map( // find the item in the array that matches the provided roomId
                                         // then copy that room and append the new message
-            (room) => room.room_id === roomId ? {...room, messages: [...room.messages, action.message]} : room
+            (room) => room.room_id === roomId ? {...room, messages: [...room?.messages, action.message]} : room
           )
         }
       }
