@@ -49,7 +49,10 @@ function RoomsList(props: IRoomListDispatchProps) {
       // debugger;
       // props.setRoom(room);
       setLoading(false);
+      setMenuOrChat(true);
       console.log(room.room_id);
+
+      history.push({pathname: `/rooms/${room.name}`, state: {room: room}});
       setCurrentRoom(room);
     })
   }
